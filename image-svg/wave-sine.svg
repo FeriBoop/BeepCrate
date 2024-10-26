@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="128"
+   viewBox="0 0 67.733332 33.866667"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="wave-sine.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="2.8507295"
+     inkscape:cx="111.90118"
+     inkscape:cy="123.82795"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="8.4666663"
+       spacingy="8.4666662"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="4"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1.3"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false"
+       uniform="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1.3"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false"
+       uniform="false" />
+    <inkscape:path-effect
+       effect="bspline"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1.3"
+       weight="33.333333"
+       steps="2"
+       helper_size="0"
+       apply_no_weight="true"
+       apply_with_weight="true"
+       only_selected="false"
+       uniform="false" />
+  </defs>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Symbol outline">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:5.26904357;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M 8.9001022,42.333331 C 14.516206,33.83668 20.092672,25.399998 25.688957,26.811109 c 5.596285,1.411112 11.249557,12.814956 16.788854,14.211697 5.539297,1.396742 11.19257,-7.156142 16.788854,-15.622808"
+       id="path2"
+       inkscape:path-effect="#path-effect4"
+       inkscape:original-d="M 8.9001022,42.333331 C 14.516206,33.83668 20.092672,25.399998 25.688957,16.933332 31.285241,28.222221 36.938514,39.626065 42.477811,50.799997 48.017108,42.419548 53.670381,33.866664 59.266665,25.399998"
+       transform="matrix(1.0086056,0,0,1,-0.51002644,-16.933332)"
+       sodipodi:nodetypes="czcc" />
+  </g>
+  <g
+     inkscape:label="Symbol fill"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.95178;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       d="M 8.9001022,42.333331 C 14.516206,33.83668 20.092672,25.399998 25.688957,26.811109 c 5.596285,1.411112 11.249557,12.814956 16.788854,14.211697 5.539297,1.396742 11.19257,-7.156142 16.788854,-15.622808"
+       id="path1"
+       inkscape:path-effect="#path-effect2"
+       inkscape:original-d="M 8.9001022,42.333331 C 14.516206,33.83668 20.092672,25.399998 25.688957,16.933332 31.285241,28.222221 36.938514,39.626065 42.477811,50.799997 48.017108,42.419548 53.670381,33.866664 59.266665,25.399998"
+       transform="matrix(1.0086056,0,0,1,-0.51002644,-16.933332)"
+       sodipodi:nodetypes="czcc" />
+  </g>
+</svg>
