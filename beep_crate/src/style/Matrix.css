@@ -1,0 +1,61 @@
+.matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.matrix-header {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    background-color: #e0e0e0;
+    padding: 4px 0;
+    position: sticky; /* Make the header sticky */
+    top: 0; /* Position it at the top */
+    z-index: 1; /* Ensure it appears above other rows */
+}
+
+.matrix-tone-header {
+    width: 50px;
+    padding-right: 10px;
+    text-align: right;
+    font-weight: bold;
+    background-color: #e0e0e0; /* Make it distinct */
+}
+
+.matrix-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc; /* Slim border after each row */
+}
+
+.matrix-tone {
+    width: 50px;
+    padding-right: 10px;
+    text-align: right;
+    font-weight: bold;
+    background-color: #e0e0e0; /* Ensure tone row is visually distinct */
+    /* Keep this for tone row */
+}
+
+.matrix-cell,
+.matrix-cell-header {
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.matrix-cell.active {
+    background-color: #4caf50;
+}
+
+.thick-border {
+    border-right: 3px solid #333; /* Apply a thick right border for column headers */
+}
+
+.solid-border {
+    border-bottom: 4px solid #000; /* Thicker solid bottom border after each octave */
+}
