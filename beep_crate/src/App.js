@@ -1,10 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
-import {TrackSettingsComponent} from "./components/TrackSettingsComponent";
+import './components/Matrix.js';
+import Matrix from './components/Matrix.js';
 
 function App() {
   return (
-      <div className="App"></div>
+  <>
+    <Matrix />
+  </>
   );
 }
 
