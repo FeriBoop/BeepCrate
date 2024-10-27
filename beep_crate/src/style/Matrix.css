@@ -2,60 +2,100 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: auto;
+    background-color: #fff;
+    color: #000; 
+    padding-bottom: 20px; /* Padding at the bottom for better spacing */
+    max-height: 75em; /* Set a max height for the matrix */
 }
 
 .matrix-header {
     display: flex;
     align-items: center;
     font-weight: bold;
-    background-color: #e0e0e0;
+    background-color: lightgray;
     padding: 4px 0;
-    position: sticky; /* Make the header sticky */
-    top: 0; /* Position it at the top */
-    z-index: 1; /* Ensure it appears above other rows */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-bottom: 2px solid #333; /* Add a bottom border to separate the header */
 }
 
 .matrix-tone-header {
     width: 50px;
     padding-right: 10px;
     text-align: right;
-    font-weight: bold;
-    background-color: #e0e0e0; /* Make it distinct */
-}
-
-.matrix-row {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc; /* Slim border after each row */
+    background-color: #fff;
 }
 
 .matrix-tone {
     width: 50px;
     padding-right: 10px;
     text-align: right;
-    font-weight: bold;
-    background-color: #e0e0e0; /* Ensure tone row is visually distinct */
-    /* Keep this for tone row */
+    background-color: lightgray;
+}
+
+.matrix-row {
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 .matrix-cell,
 .matrix-cell-header {
     width: 30px;
     height: 30px;
-    margin: 2px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
+    background-color: #fff; 
+    border: 1px solid #444;
+    box-sizing: border-box;
     cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for background color changes */
+}
+
+.matrix-cell{
+    background-color: rgb(245, 238, 238);
+}
+
+.matrix-cell.active {
+    background-color: #4caf50; /* Green for active cells */
+}
+
+.matrix-row.octave-divider {
+    border-bottom: 4px solid #000;
+}
+
+.matrix-cell-divider {
+    position: relative;
+}
+
+.matrix-cell-divider::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: #333;
+}
+
+.matrix-cell.whole {
+    background-color: #4caf50; /* Green for whole */
+}
+
+.matrix-cell.half {
+    background-color: #ff9800; /* Orange for half */
+}
+
+.matrix-cell.quarter {
+    background-color: #f44336; /* Red for quarter */
+}
+
+.matrix-cell.eighth {
+    background-color: #2196f3; /* Blue for eighth */
 }
 
 .matrix-cell.active {
     background-color: #4caf50;
-}
-
-.thick-border {
-    border-right: 3px solid #333; /* Apply a thick right border for column headers */
-}
-
-.solid-border {
-    border-bottom: 4px solid #000; /* Thicker solid bottom border after each octave */
 }
