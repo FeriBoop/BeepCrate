@@ -4,11 +4,14 @@
  * use: import Tone from '<path_to_this>.mjs'
  */
 
-export default class Tone{
+export default class Tone {
+    //#region values
     #name               // name of tone (e.g. 'c1', 'd1',...)
     #frequency;         // Frequency in Hz
     #unitBlocks;        // Map of when will this tone be played - key is index (positive integer number) and value is length (positive intger number)
+    //#endregion
 
+    //#region constructor
     /** Default constructor
      *
      * @param name
@@ -20,6 +23,9 @@ export default class Tone{
         this.#unitBlocks = new Map();
     }
 
+    //#endregion
+
+    //#region Getters and Setters
     /** Get name
      * @returns {*}
      */
@@ -49,6 +55,9 @@ export default class Tone{
         this.#frequency = value;
     }
 
+    //#endregion
+
+    //#region Tone related methods
     /** Gets a length of a note at specified index
      * @param key
      * @returns {*|null}
@@ -80,7 +89,9 @@ export default class Tone{
     /** Get all notes from map
      * @returns $ObjMap
      */
-    getAllNotes(){
+    getAllNotes() {
         return this.#unitBlocks;
     }
+
+    //#endregion
 }
