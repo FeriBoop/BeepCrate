@@ -11,16 +11,6 @@ export const WaveType = Object.freeze({
     NOISE: 'noise',
 });
 
-/** Enum for Noise Types
- * this defines types of noise
- * @type {Readonly<{WHITE: string, PINK: string, BROWN: string}>}
- */
-export const NoiseType = Object.freeze({
-    WHITE: 'white',
-    PINK: 'pink',
-    BROWN: 'brown',
-});
-
 /** Enum for Filter Types
  * this defines type if filters
  * @type {Readonly<{LOWPASS: string, BANDPASS: string, HIGHSHELF: string, NOTCH: string, LOWSHELF: string, ALLPASS: string, PEAKING: string, HIGHPASS: string}>}
@@ -34,6 +24,7 @@ export const FilterType = Object.freeze({
     PEAKING: 'peaking',
     LOWSHELF: 'lowshelf',
     HIGHSHELF: 'highshelf',
+    NULL: null,
 });
 
 /** Enum for Rolloff Types
