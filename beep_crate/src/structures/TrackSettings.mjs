@@ -1,4 +1,4 @@
-import {WaveType, NoiseType, FilterType, Rolloff} from './Enums.mjs'; //importing enum values from Enums.mjs
+import {WaveType, FilterType, Rolloff} from './Enums.mjs'; //importing enum values from Enums.mjs
 
 /**
  * Class TrackSettings
@@ -6,19 +6,18 @@ import {WaveType, NoiseType, FilterType, Rolloff} from './Enums.mjs'; //importin
  * use: import TrackSettings from '<path_to_this>.mjs'
  */
 export default class TrackSettings {
+    //#region values
     /* oscillator */
     #waveType;       // Options: 'sine', 'square', 'sawtooth', 'triangle', 'noise'
     #detune;              // Detune in cents (±1200)
 
     /* amplitude */
-    #volume;            // Volume level (0-100)
-    #attack;            // Attack time (seconds)
-    #decay;             // Decay time (seconds)
+    #volume;            // Volume gain level (0-100)
+    #attack;            // Attack time (0-1)
+    #decay;             // Decay time (0-1)
     #sustain;           // Sustain level (0-1)
-    #release;             // Release time (seconds)
+    #release;             // Release time (0-1)
 
-    /* noise */
-    #noiseType;     // Options: 'white', 'pink', 'brown'
 
     /* filter */
     #filterType;  // Single filter type (Options: 'lowpass', 'highpass', 'bandpass', 'notch', 'allpass', 'peaking', 'lowshelf', 'highshelf')
@@ -28,11 +27,14 @@ export default class TrackSettings {
 
     /* effects */
     #reverbAmount;        // Amount of reverb (0-1)
-    #delayTime;           // Delay time in seconds
+    #delayTime;           // Delay time in seconds (0-1)
 
     /* custom */
     #isMute;          // Mute flag
 
+    //#endregion
+
+    //#region constructor
     /**
      * default constructor for TestSettings
      * @param waveType
@@ -42,7 +44,6 @@ export default class TrackSettings {
      * @param decay
      * @param sustain
      * @param release
-     * @param noiseType
      * @param filterType
      * @param cutoffFrequency
      * @param q
@@ -54,18 +55,17 @@ export default class TrackSettings {
     constructor({
                     waveType = WaveType.SINE,            // Default value
                     detune = 0,                         // Default detune
-                    volume = 100,                       // Default volume
-                    attack = 1.0,                       // Default attack time
-                    decay = 1.0,                        // Default decay time
-                    sustain = 1.0,                      // Default sustain level
+                    volume = 0,                       // Default volume gain
+                    attack = 0.005,                       // Default attack time
+                    decay = 0.1,                        // Default decay time
+                    sustain = 0.3,                      // Default sustain level
                     release = 1,                        // Default release time
-                    noiseType = NoiseType.WHITE,         // Default noise type
-                    filterType = FilterType.LOWPASS,     // Default filter type
+                    filterType = FilterType.NULL,     // Default filter type
                     cutoffFrequency = 1000,             // Default cutoff frequency
                     q = 1,                              // Default Q factor
                     rolloff = Rolloff.DB_12,            // Default rolloff
-                    reverbAmount = 0,                   // Default reverb amount
-                    delayTime = 0,                      // Default delay time
+                    reverbAmount = null,                   // Default reverb amount
+                    delayTime = null,                      // Default delay time
                     isMute = false                      // Default mute flag
                 } = {}) {
         // Assign properties
@@ -76,7 +76,6 @@ export default class TrackSettings {
         this.#decay = decay;
         this.#sustain = sustain;
         this.#release = release;
-        this.#noiseType = noiseType;
         this.#filterType = filterType;
         this.#cutoffFrequency = cutoffFrequency;
         this.#q = q;
@@ -86,7 +85,9 @@ export default class TrackSettings {
         this.#isMute = isMute;
     }
 
+    //#endregion
 
+    //#region Getters and Setters
     /** Get wave type
      * @returns {string}
      */
@@ -116,14 +117,14 @@ export default class TrackSettings {
         this.#detune = value;
     }
 
-    /** Get volume
+    /** Get volume gain
      * @returns {number}
      */
     get volume() {
         return this.#volume;
     }
 
-    /** Set volume
+    /** Set volume gain
      * 0-100 %
      * @param value
      */
@@ -189,21 +190,6 @@ export default class TrackSettings {
      */
     set release(value) {
         this.#release = value;
-    }
-
-    /** Get Noise type
-     * @returns {string}
-     */
-    get noiseType() {
-        return this.#noiseType;
-    }
-
-    /** Set Noise type
-     * Options: 'white', 'pink', 'brown'
-     * @param value
-     */
-    set noiseType(value) {
-        this.#noiseType = value;
     }
 
     /**
@@ -310,4 +296,6 @@ export default class TrackSettings {
     set isMute(value) {
         this.#isMute = value;
     }
+
+    //#endregion
 }
