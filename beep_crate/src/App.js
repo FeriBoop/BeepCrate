@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
-import {TrackSettings} from "./components/TrackSettingsComponent";
+import {TrackSettingsComponent} from "./components/TrackSettingsComponent";
 
 function App() {
   return (
-    <TrackSettings />
+      <div className="App"></div>
   );
 }
 
