@@ -73,7 +73,7 @@
 .matrix-cell-divider::after {
     content: "";
     position: absolute;
-    right: -1px;
+    right: -0.5px;
     top: 0;
     bottom: 0;
     width: 5px;
@@ -98,4 +98,37 @@
 
 .matrix-cell.active {
     background-color: #4caf50;
+}
+
+.matrix-navigation {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.matrix-navigation button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px; 
+    margin: 4px 2px; 
+    transition: background-color 0.3s, transform 0.3s; 
+    border-radius: 5px; 
+    cursor: pointer; 
+}
+
+/* Change background color on hover */
+.matrix-navigation button:hover {
+    background-color: #45a049; 
+    transform: translateY(-2px); 
+}
+
+/* Change background color on active (click) */
+.matrix-navigation button:active {
+    background-color: #388e3c; 
+    transform: translateY(0); 
 }
