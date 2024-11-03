@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import '../style/Matrix.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import NoteSelector from './NoteSelector';
 import MatrixNavigation from './MatrixNavigation';
 import MatrixHeader from './MatrixHeader';
 import MatrixRow from './MatrixRow';
+import Track from "../structures/Track.mjs"; // Ensure the path is correct
 
 const Matrix = () => {
     const initialVisibleColumns = Math.floor(window.innerWidth / 40);
@@ -13,15 +14,16 @@ const Matrix = () => {
     const [matrixData, setMatrixData] = useState(Array(60).fill().map(() => Array(initialVisibleColumns).fill('')));
     const [currentNote, setCurrentNote] = useState('');
     const [offset, setOffset] = useState(0);
+    const [track, setTrack] = useState(new Track("UserTrack", '#FFFFFF')); // Track for user notes
 
     const scrollInterval = useRef(null);
 
     const tones = [
-        "C1", "C1#", "D1", "D1#", "E1", "F1", "F1#", "G1", "G1#", "A1", "A1#", "B1",
-        "C2", "C2#", "D2", "D2#", "E2", "F2", "F2#", "G2", "G2#", "A2", "A2#", "B2",
-        "C3", "C3#", "D3", "D3#", "E3", "F3", "F3#", "G3", "G3#", "A3", "A3#", "B3",
-        "C4", "C4#", "D4", "D4#", "E4", "F4", "F4#", "G4", "G4#", "A4", "A4#", "B4",
-        "C5", "C5#", "D5", "D5#", "E5", "F5", "F5#", "G5", "G5#", "A5", "A5#", "B5"
+        "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+        "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
+        "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
+        "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
+        "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6"
     ];
 
     const noteLengths = {
@@ -82,7 +84,6 @@ const Matrix = () => {
         const endColumn = adjustedCol + length;
 
         let extraColumnsNeeded = Math.max(0, endColumn - totalColumns);
-
         await expandToFitNote(extraColumnsNeeded);
 
         setMatrixData(prevData => {
@@ -90,7 +91,28 @@ const Matrix = () => {
                 rowIndex === row
                     ? rowData.map((cell, colIndex) => {
                         if (colIndex >= adjustedCol && colIndex < adjustedCol + length) {
-                            return currentNote;
+                            // Add the note to the track
+                            
+                            var length2;
+                            switch(length) {
+                                case 16:
+                                  length2 = "1n";
+                                  break;
+                                case 8:
+                                    length2 = "2n";
+                                  break;
+                                  case 4:
+                                    length2 = "4n";
+                                  break;
+                                  case 2:
+                                    length2 = "8n";
+                                  break;
+                                default:
+                                    length2 = "4n";
+                              }
+
+                            track.tones[row].insertNewNote(adjustedCol, length2); // Add the note to the track
+                            return currentNote; // Update matrix cell with current note
                         }
                         return cell;
                     })
@@ -109,7 +131,9 @@ const Matrix = () => {
                 rowIndex === row
                     ? rowData.map((cell, colIndex) => {
                         if (colIndex >= actualCol && colIndex < actualCol + length) {
-                            return '';
+                            // Clear the note from the matrix
+                            track.tones[row].removeNote(actualCol); // Implement removeNote method in your Track class
+                            return ''; // Clear the matrix cell
                         }
                         return cell;
                     })
@@ -117,6 +141,10 @@ const Matrix = () => {
             );
             return updatedData;
         });
+    };
+
+    const handlePlay = async () => {
+        await track.playFromIndex(); // Call the play method on the Track instance
     };
 
     return (
@@ -128,6 +156,7 @@ const Matrix = () => {
                 startScrolling={startScrolling} 
                 stopScrolling={stopScrolling} 
             />
+            <button onClick={handlePlay}>Play Track</button> {/* Play button for the track */}
             <div className="matrix">
                 <MatrixHeader visibleColumns={visibleColumns} offset={offset} />
                 {matrixData.map((row, rowIndex) => (
