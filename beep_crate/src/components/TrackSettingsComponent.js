@@ -4,7 +4,7 @@ import {WaveType, FilterType, Rolloff} from "../structures/Enums.mjs";
 import './TrackSettingsComponent.css'
 
 /**
- * A component for settings track settings. It can set all variables in the TrackSetting class aside from 'volume' and 'isMute'.
+ * A component for manipulating track settings. It can set all variables in the TrackSetting class aside from 'volume' and 'isMute'.
  * It requires 'settings' property to be set (a TrackSettings object).
  */
 export class TrackSettingsComponent extends React.Component {
@@ -146,7 +146,7 @@ export class TrackSettingsComponent extends React.Component {
 
     render() {
         return (
-            <div className={"g-0 container-fluid " + (this.props.className === undefined ? "" : this.props.className)}
+            <div className={(this.props.className === undefined ? "" : this.props.className)}
                  style={this.props.style}>
                 <div className="row container-fluid gx-3">
                     {/*First section - Wave settings*/}
