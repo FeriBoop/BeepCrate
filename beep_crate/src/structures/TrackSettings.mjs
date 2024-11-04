@@ -298,4 +298,68 @@ export default class TrackSettings {
     }
 
     //#endregion
+
+    //#region JSON
+    /** Helper method that helps JSON.stringify to correctly transform this object
+     * @returns {{isMute: boolean, release: number, rolloff: number, waveType: string, decay: number, cutoffFrequency: number, volume: number, q: number, reverbAmount: null, detune: number, attack: number, delayTime: null, filterType: null, sustain: number}}
+     */
+    toJSON() {
+        return { //for each attribute is uses current value or default
+            waveType: this.#waveType ?? WaveType.SINE, //type WaveType (enum)
+            detune: this.#detune ?? 0,                      //type number
+            volume: this.#volume ?? 0,                      //type number
+            attack: this.#attack ?? 0.005,                  //type number
+            decay: this.#decay ?? 0.1,                      //type number
+            sustain: this.#sustain ?? 0.3,                  //type number
+            release: this.#release ?? 1,                    //type number
+            filterType: this.#filterType ?? FilterType.NULL,//Type FilterType (enum)
+            cutoffFrequency: this.#cutoffFrequency ?? 1000, //type number
+            q: this.#q ?? 1,                                //type number
+            rolloff: this.#rolloff ?? Rolloff.DB_12,        //Type Rolloff (enum)
+            reverbAmount: this.#reverbAmount ?? null,       //Type ReverbAmount (enum)
+            delayTime: this.#delayTime ?? null,             //Type number
+            isMute: this.#isMute ?? false,                  //Type bool
+        };
+    }
+
+    /** static helper method that helps correctly transform from JSON to this object
+     * @param json
+     * @returns {TrackSettings}
+     */
+    static fromJSON(json) { //it reads all data from json file and saves it into new TrackSettings object and returns it
+        const {
+            waveType,
+            detune,
+            volume,
+            attack,
+            decay,
+            sustain,
+            release,
+            filterType,
+            cutoffFrequency,
+            q,
+            rolloff,
+            reverbAmount,
+            delayTime,
+            isMute
+        } = json;
+
+        return new TrackSettings({
+            waveType: waveType || WaveType.SINE, // For each attribute it saves the provided value or default one
+            detune: detune || 0,
+            volume: volume || 0,
+            attack: attack || 0.005,
+            decay: decay || 0.1,
+            sustain: sustain || 0.3,
+            release: release || 1,
+            filterType: filterType || FilterType.NULL,
+            cutoffFrequency: cutoffFrequency || 1000,
+            q: q || 1,
+            rolloff: rolloff || Rolloff.DB_12,
+            reverbAmount: reverbAmount || null,
+            delayTime: delayTime || null,
+            isMute: isMute || false,
+        });
+    }
+    //#endregion
 }
