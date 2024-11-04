@@ -7,6 +7,7 @@ const NoteSelector = ({ setCurrentNote }) => {
             <button onClick={() => setCurrentNote('half')}>Half</button>
             <button onClick={() => setCurrentNote('quarter')}>Quarter</button>
             <button onClick={() => setCurrentNote('eighth')}>Eighth</button>
+            <button onClick={() => setCurrentNote('sixteenth')}>Sixteenth</button>
         </div>
     );
 };
