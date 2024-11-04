@@ -138,10 +138,12 @@ export default class PolySynthManager {
     /** Play method
      * Play provided tones from x index onwards
      * @param tones
+     * @param volume
      * @param startIndex
      * @returns {Promise<void>}
      */
-    async play(tones, startIndex = 0) {
+    async play(tones, volume, startIndex = 0) {
+        this.#polySynth.volume.value = volume;
         this.#connectSynthToMaster(); // call connect to output method
         const now = Tone.Transport.seconds + 0.5;  // Get the current transport time
         Tone.Transport.bpm.value = BPM;       // Set the tempo from global variable
