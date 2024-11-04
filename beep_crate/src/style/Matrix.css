@@ -96,6 +96,10 @@
     background-color: #2196f3; /* Blue for eighth */
 }
 
+.matrix-cell.sixteenth {
+    background-color: yellow;
+}
+
 .matrix-cell.active {
     background-color: #4caf50;
 }
