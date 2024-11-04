@@ -57,6 +57,32 @@ export default class Tone {
 
     //#endregion
 
+    //#region JSON
+    /** Helper method that helps JSON.stringify to correctly transform this object
+     * @returns {{unitBlocks: unknown[], name, frequency}}
+     */
+    toJSON() {
+        return {
+            name: this.#name,
+            frequency: this.#frequency,
+            unitBlocks: Array.from(this.#unitBlocks.entries()) // Converting Map to array of entries
+        };
+    }
+
+    /** static helper method that helps correctly transform from JSON to this object
+     * @param json
+     * @returns {Tone}
+     */
+    static fromJSON(json) {
+        const { name, frequency, unitBlocks } = json;   //Gets values from file
+        const tone = new Tone(name, frequency); // Creates a new Tone instance
+        unitBlocks.forEach(([index, length]) => {
+            tone.insertNewNote(index, length); // Rebuilds the Map inside each tone
+        });
+        return tone;
+    }
+    //#endregion
+
     //#region Tone related methods
     /** Gets a length of a note at specified index
      * @param key
