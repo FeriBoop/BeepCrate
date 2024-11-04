@@ -1,8 +1,10 @@
 import TrackSettings from './TrackSettings.mjs';
 import {generateTones} from "../HelperFunctionsForLogic/TrackGeneratorFunctions.mjs";
 import PolySynthManager from '../HelperFunctionsForLogic/ToneJsManager.mjs';
-import * as Tone from "tone";
+import * as ToneLibrary from "tone";
+import Tone from './Tone.mjs';
 import {TRACK_PLAY_POSITION} from "./GlobalVariables.mjs";
+import {exportToJson} from "./ImportExport/ImportAndExport.mjs";
 
 /**
  * Class Track
@@ -13,7 +15,8 @@ export default class Track {
     //#region values
     #title = "Title"; //track name
     #color = "#FFFFFF"; //ui color of track
-    #volume = 100; //volume of the track (0-100)
+    #volume = 0; //volume of the track (-100, 100)
+    #numberOfOctaves; //number of octaves
     #tones = []; //array of tones
     #trackSettings; //instance of trackSettings
     #PolySynth; //instance of ToneJsManager class
@@ -26,15 +29,14 @@ export default class Track {
      * @param numberOfOctaves - number between 1 and 8 - defines number of octaves
      * @param volume - volume of the Track (0-100)
      */
-    constructor(title, color, numberOfOctaves = 5, volume = 100) {
+    constructor(title, color, numberOfOctaves = 5, volume = 0) {
         this.#title = title;
         this.#color = color;
         this.#volume = volume
+        this.#numberOfOctaves = numberOfOctaves
         this.#tones = generateTones(this.#tones, numberOfOctaves);
         this.#trackSettings = new TrackSettings();
-
-        this.#PolySynth = new PolySynthManager(this.#trackSettings, numberOfOctaves);
-        this._volume = volume;
+        this.#PolySynth = new PolySynthManager(this.#trackSettings, this.#numberOfOctaves);
     }
 
     //#endregion
@@ -60,6 +62,24 @@ export default class Track {
      */
     get color() {
         return this.#color;
+    }
+
+    /** Set number of octaves
+     * Integer between 1 and 8
+     * @param value
+     */
+    set numberOfOctaves(value) {
+        if(value < 1 || value > 8)
+            this.#numberOfOctaves = 1;
+        else
+            this.#numberOfOctaves = value;
+    }
+
+    /** Get number of octaves
+     * @returns {number}
+     */
+    get numberOfOctaves() {
+        return this.#numberOfOctaves;
     }
 
     /** Set color with HEX value
@@ -130,7 +150,24 @@ export default class Track {
 
 //#endregion
 
-    //#region Methods for Tone.js library
+    //#region JSON
+    /** Helper method that helps JSON.stringify to correctly transform this object
+     * @returns {{volume: number, numberOfOctaves, color: string, tones: *[], title: string, trackSettings}}
+     */
+    toJSON() {
+        return {
+            title: this.#title, //type string
+            color: this.#color, //type string (HEX)
+            volume: this.#volume, //Type number
+            numberOfOctaves: this.#numberOfOctaves, //type number
+            tones: this.#tones, //type tones object
+            trackSettings: this.#trackSettings, //type trackSettings object
+        };
+    }
+
+    //#endregion
+
+    //#region Methods for ToneLibrary.js library
     /** Function for playing song from beginning
      * stops all sounds (if there are any)
      * then plays all tones that are inside this object
@@ -139,13 +176,13 @@ export default class Track {
     async playFromBeginning() {
         this.stopPlayingTrack(); //stops all tones
         this.changeSettings();
-        const audioContext = Tone.getContext(); //gets context of audio - because Tone.js requires it for working
+        const audioContext = ToneLibrary.getContext(); //gets context of audio - because ToneLibrary.js requires it for working
 
         if (audioContext.state === 'suspended') {
             await audioContext.resume(); //updates audioContext if it is suspended
             console.log("Audio context resumed");
         }
-        this.#PolySynth.play(this.#tones); //plays all tones
+        this.#PolySynth.play(this.#tones, this.#volume); //plays all tones
     }
 
     /** Function for playing song from specified index
@@ -158,13 +195,13 @@ export default class Track {
     async playFromIndex() {
         this.stopPlayingTrack(); //stops all tones
         this.changeSettings();
-        const audioContext = Tone.getContext();
+        const audioContext = ToneLibrary.getContext();
 
         if (audioContext.state === 'suspended') {
-            await audioContext.resume(); //gets context of audio - because Tone.js requires it for working
+            await audioContext.resume(); //gets context of audio - because ToneLibrary.js requires it for working
             console.log("Audio context resumed");
         }
-        this.#PolySynth.play(this.#tones, TRACK_PLAY_POSITION); //plays tones from x index onwards
+        this.#PolySynth.play(this.#tones, this.#volume, TRACK_PLAY_POSITION); //plays tones from x index onwards
     }
 
     /** Function that calls function to stop all tones (including scheduled ones)
@@ -182,4 +219,33 @@ export default class Track {
     }
 
 //#endregion
+
+    //#region Import and Export
+
+    /** Method that calls export to Json function from ImportAndExport.mjs
+     * @param name
+     */
+    exportToAFile(name){
+        exportToJson(this, name);
+    }
+    /** static helper method that helps correctly transform from JSON to this object
+     * @param json
+     * @returns {Track}
+     */
+    static importFromJSONFile(json) {
+        const { title, color, volume, numberOfOctaves, tones, trackSettings } = json; //gets different attributes from json file
+        const track = new Track(title, color, numberOfOctaves, volume); //creates new track
+        track.#trackSettings = TrackSettings.fromJSON(trackSettings); // Set track settings directly, by calling static method inside Settings
+
+        track.#tones = []; //sets tones array to empty, because Track constructor automatically insert some of them
+        tones.forEach(toneJson => {
+            const tone = Tone.fromJSON(toneJson); // Uses the static method to create ToneLibrary instances
+            track.#tones.push(tone); // Adds tone object into tones array
+        });
+        // Recreate ToneLibrary instances from the JSON
+        track.#PolySynth = new PolySynthManager(track.#trackSettings, track.#numberOfOctaves);
+
+        return track;
+    }
+    //#endregion
 }
