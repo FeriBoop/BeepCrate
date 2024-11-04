@@ -8,7 +8,6 @@ import Track from "../structures/Track.mjs";
  */
 function Play(){
     const [track, setTrack] = useState(null);
-
     //creates new track
     React.useEffect(() => {
         const newTrack = new Track("Track1", '#FFFFFF');
@@ -35,6 +34,7 @@ function Play(){
     //play the track
     const handlePlay = async () => {
         if (track) {
+            track.exportToAFile("testExport.json");
             await track.playFromIndex(); // Call the play method on the Track instance
         }
     };
