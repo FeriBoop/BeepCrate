@@ -1,6 +1,8 @@
 import React from 'react';
 import {TrackSettingsComponent} from "./TrackSettingsComponent";
 import './TrackSettingsComponent.css'
+import button from "bootstrap/js/src/button";
+
 let Globals = require("../structures/GlobalVariables.mjs");
 
 const noteSymbols = {
@@ -11,12 +13,28 @@ const noteSymbols = {
     sixteenth: "1/16"
 }
 
+/**
+ * This component is a frontend for track settings and playback control.
+ * @prop {(newNote: string) => {}} onSelectedNoteChanged - Callback for when the selected note changes. Its parameter is a string representing the newly selected note
+ * @prop {function(boolean)} onPlayingChanged - Callback for when the playing state changes.
+ * @prop {function()} onRewindToIndex - Callback for when the 'Rewind to index' button is pressed.
+ * @prop {function()} onRewindToBeginning - Callback for when the 'Rewind to beginning' button is pressed.
+ */
 class TrackControlComponent extends React.Component {
 
     state = {
         selectedNote: "whole",
         localRythm: Globals.BEATS,
         localBpm: Globals.BPM,
+        playing: false,
+        looping: false,
+        volume: 50
+    }
+
+    constructor(props) {
+        super(props);
+
+        this.state.volume = this.props.track.volume;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -24,8 +42,12 @@ class TrackControlComponent extends React.Component {
             if (this.props.onSelectedNoteChanged) this.props.onSelectedNoteChanged(this.state.selectedNote);
         }
 
-        if(prevState.localBpm !== this.state.localBpm) Globals.setBpm(this.state.localBpm)
-        if(prevState.localRythm !== this.state.localRythm) Globals.setBeats(this.state.localRythm);
+        if (prevState.localBpm !== this.state.localBpm) Globals.setBpm(this.state.localBpm)
+        if (prevState.localRythm !== this.state.localRythm) Globals.setBeats(this.state.localRythm);
+        if (prevState.volume !== this.state.volume) this.props.track.volume = this.state.volume;
+        if(prevState.playing !== this.state.playing){
+            if(this.props.onPlayingChanged) this.props.onPlayingChanged(this.state.playing);
+        }
     }
 
     //#region handlers
@@ -34,6 +56,18 @@ class TrackControlComponent extends React.Component {
         if (e.target.checked && this.state.selectedNote !== e.target.value) {
             this.setState({selectedNote: e.target.value});
         }
+    }
+
+    #handlePlayButtonClick = (e) => {
+        this.setState({playing: !this.state.playing});
+    }
+
+    #handleRewindToIndex = (e) => {
+        if(this.props.onRewindToIndex) this.props.onRewindToIndex();
+    }
+
+    #handleRewindToBeginning = (e) => {
+        if(this.props.onRewindToBeginning) this.props.onRewindToBeginning();
     }
 
     //#endregion
@@ -89,7 +123,23 @@ class TrackControlComponent extends React.Component {
 
                     {/* Playback control */}
                     <div className={"col-auto g-0"}>
+                        <div className={"row g-0"}>
+                            <input type={"range"} min={-32} max={32} value={this.state.volume}
+                            onChange={(e) => this.setState({volume: e.target.value})}/>
+                        </div>
+                        <div className={"row g-0"}>
+                            <button
+                                onClick={this.#handlePlayButtonClick}>
+                                {this.state.playing ? "Pause" : "Play"}
+                            </button>
+                            <button onClick={this.#handleRewindToIndex}>
+                                Rewind to index
+                            </button>
+                            <button onClick={this.#handleRewindToBeginning}>
+                                Rewind to beginning
+                            </button>
 
+                        </div>
                     </div>
                 </div>
             </div>
