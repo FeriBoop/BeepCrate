@@ -1,7 +1,7 @@
 import React from 'react';
 import {TrackSettingsComponent} from "./TrackSettingsComponent";
-import './TrackSettingsComponent.css'
-import button from "bootstrap/js/src/button";
+import './SharedStyle.css'
+import './TrackControlComponent.css'
 
 let Globals = require("../structures/GlobalVariables.mjs");
 
@@ -79,10 +79,9 @@ class TrackControlComponent extends React.Component {
             let label = noteSymbols[key];
 
             el.push(
-                <label className={"col-auto g-2 wave-radio"}>
-                    {label}
+                <label className={"col-auto g-2 image-radio note-radio"}>
+                    <img src={`icons/note-${key}.svg`} alt={key}/>
                     <input type={"radio"} value={key} checked={this.state.selectedNote === key}
-                           style={{width: 0, height: 0}}
                            name={"noteSelection"}
                            onChange={this.#handleNoteSelectChange}/>
                 </label>
@@ -102,18 +101,19 @@ class TrackControlComponent extends React.Component {
 
                     {/* Note selection & rythm/bpm */}
                     <div className={"col-auto g-0"}>
-                        <div className={"row g-0"}>
+                        <div className={"row gy-0"}>
                             {this.#renderNoteButtons()}
                         </div>
-                        <div className={"row g-0"}>
-                            <div className={"col g-0"}>
-                                <p>BPM</p>
+                        <div className={"row gy-0"}>
+                            <div className={"col flex-column g-0 align-content-center"}>
+                                <p className={"text-center"}>BPM</p>
                                 <input type={"number"} min={20} max={300}
+                                       className={""}
                                        value={this.state.localBpm}
                                        onChange={(e) => this.setState({localBpm: e.target.value})}/>
                             </div>
                             <div className={"col g-0"}>
-                                <p>RYTHM</p>
+                                <p className={"text-center"}>RYTHM</p>
                                 <input type={"number"} min={2} max={10}
                                        value={this.state.localRythm}
                                        onChange={(e) => this.setState({localRythm: e.target.value})}/>
@@ -128,15 +128,19 @@ class TrackControlComponent extends React.Component {
                             onChange={(e) => this.setState({volume: e.target.value})}/>
                         </div>
                         <div className={"row g-0"}>
-                            <button
+                            <button className={"col playback-control"}
                                 onClick={this.#handlePlayButtonClick}>
-                                {this.state.playing ? "Pause" : "Play"}
+                                <img src={this.state.playing ? "icons/button-pause.svg" : "icons/button-play.svg"} alt={"Play button icon"}/>
                             </button>
-                            <button onClick={this.#handleRewindToIndex}>
-                                Rewind to index
+                            <button className={"col playback-control"}
+                                onClick={this.#handleRewindToIndex}>
+                                <img src={"icons/button-rewind-to-index.svg"}
+                                     alt={"Play button icon"}/>
                             </button>
-                            <button onClick={this.#handleRewindToBeginning}>
-                                Rewind to beginning
+                            <button className={"col playback-control"}
+                                onClick={this.#handleRewindToBeginning}>
+                                <img src={"icons/button-rewind-to-start.svg"}
+                                     alt={"Play button icon"}/>
                             </button>
 
                         </div>

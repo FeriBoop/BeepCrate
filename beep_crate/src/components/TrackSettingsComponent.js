@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {WaveType, FilterType, Rolloff} from "../structures/Enums.mjs";
-import './TrackSettingsComponent.css'
+import './SharedStyle.css'
 
 /**
  * A component for manipulating track settings. It can set all variables in the TrackSetting class aside from 'volume' and 'isMute'.
@@ -96,14 +96,13 @@ export class TrackSettingsComponent extends React.Component {
             let val = WaveType[type];
             if (val === "noise") continue; // stopgap until NOISE is removed from the enum
             buttons.push(
-                <label className={"row wave-radio g-0"}>
+                <label className={"row image-radio g-0"}>
                     <input type={"radio"}
                            name={"waveSelect"}
-                           style={{width: 0, height: 0}} // Hide button
                            checked={this.state.waveType === val}
                            onChange={this.#createInputHandler("waveType")}
                            value={val}/>
-                    <img src={"wave-" + val + ".png"} alt=""
+                    <img src={"icons/wave-" + val + ".svg"} alt=""
                          style={{width: 64}}/>
                 </label>
             )

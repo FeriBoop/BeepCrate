@@ -1,8 +1,0 @@
-label.wave-radio {
-    background-color: white;
-    width: 64px;
-}
-
-label.wave-radio:has(> input:checked) {
-    background-color: lightgray;
-}
