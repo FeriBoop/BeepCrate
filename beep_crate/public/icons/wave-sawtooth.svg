@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="256"
+   width="194"
    height="128"
-   viewBox="0 0 67.733332 33.866667"
+   viewBox="0 0 51.329166 33.866667"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   sodipodi:docname="wave-square.svg"
+   sodipodi:docname="wave-sawtooth.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -93,9 +93,9 @@
      inkscape:label="Symbol outline">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:5.29167;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
-       d="M 8.4666663,25.399998 V 8.4666661 H 25.399999 V 25.399998 H 42.333332 V 8.4666661 l 16.933332,0 -10e-7,16.9333319"
+       d="M 8.4666663,25.399998 25.399999,8.466666 V 25.399998 L 42.333332,8.4666661"
        id="path2"
-       sodipodi:nodetypes="cccccc" />
+       sodipodi:nodetypes="cccc" />
   </g>
   <g
      inkscape:label="Symbol fill"
@@ -103,8 +103,8 @@
      id="layer1">
     <path
        style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.96875;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       d="M 8.4666663,25.399998 V 8.4666661 H 25.399999 V 25.399998 H 42.333332 V 8.4666661 l 16.933332,0 0,16.9333319"
+       d="M 8.4666663,25.399998 25.399999,8.466666 V 25.399998 L 42.333332,8.4666661"
        id="path1"
-       sodipodi:nodetypes="cccccc" />
+       sodipodi:nodetypes="cccc" />
   </g>
 </svg>

@@ -1,0 +1,17 @@
+label.image-radio{
+
+}
+
+label.image-radio:has(> input:checked) {
+    background-color: lightgray;
+}
+
+label.image-radio > img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+label.image-radio > input{
+    width: 0;
+    height: 0;
+}

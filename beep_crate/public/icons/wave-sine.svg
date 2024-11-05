@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="256"
+   width="192"
    height="128"
-   viewBox="0 0 67.733332 33.866667"
+   viewBox="0 0 50.799999 33.866667"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   sodipodi:docname="wave-triangle.svg"
+   sodipodi:docname="wave-sine.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -38,18 +38,40 @@
        units="px"
        originx="0"
        originy="0"
-       spacingx="8.4666663"
+       spacingx="4.2333332"
        spacingy="8.4666662"
        empcolor="#0099e5"
        empopacity="0.30196078"
        color="#0099e5"
        opacity="0.14901961"
-       empspacing="4"
+       empspacing="8"
+       enabled="true"
+       visible="true" />
+    <inkscape:grid
+       id="grid2"
+       units="px"
+       originx="8.4666663"
+       originy="0"
+       spacingx="11.288889"
+       spacingy="33.866668"
+       empcolor="#e53600"
+       empopacity="0.30196078"
+       color="#e52100"
+       opacity="0.14901961"
+       empspacing="1"
        enabled="true"
        visible="true" />
   </sodipodi:namedview>
   <defs
      id="defs1">
+    <linearGradient
+       id="swatch2"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+    </linearGradient>
     <inkscape:path-effect
        effect="bspline"
        id="path-effect4"
@@ -92,17 +114,19 @@
      id="layer2"
      inkscape:label="Symbol outline">
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:5.29167;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke"
-       d="M 8.4666663,25.399998 25.399999,8.466666 42.33333,25.399998 59.266663,8.466666"
-       id="path2" />
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.29167;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 8.4666663,25.399998 c 0,0 2.2374727,-15.922473 8.4666667,-16.9333319 C 24.812708,7.1880195 25.98729,26.678645 33.866665,25.399998 40.095859,24.389139 42.33333,8.466666 42.33333,8.466666"
+       id="path3"
+       sodipodi:nodetypes="cssc" />
   </g>
   <g
      inkscape:label="Symbol fill"
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.96874998;stroke-linecap:round;stroke-linejoin:round;paint-order:fill markers stroke;stroke-opacity:1;stroke-dasharray:none"
-       d="M 8.4666663,25.399998 25.399999,8.466666 42.33333,25.399998 59.266663,8.466666"
-       id="path1" />
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:3.96874998;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 8.4666663,25.399998 c 0,0 2.2374727,-15.922473 8.4666667,-16.9333319 C 24.812708,7.1880195 25.98729,26.678645 33.866665,25.399998 40.095859,24.389139 42.33333,8.466666 42.33333,8.466666"
+       id="path2"
+       sodipodi:nodetypes="cssc" />
   </g>
 </svg>
