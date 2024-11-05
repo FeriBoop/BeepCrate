@@ -79,7 +79,7 @@ class TrackControlComponent extends React.Component {
             let label = noteSymbols[key];
 
             el.push(
-                <label className={"col-auto g-2 image-radio note-radio"}>
+                <label className={"col image-radio note-radio"}>
                     <img src={`icons/note-${key}.svg`} alt={key}/>
                     <input type={"radio"} value={key} checked={this.state.selectedNote === key}
                            name={"noteSelection"}
@@ -96,25 +96,28 @@ class TrackControlComponent extends React.Component {
     render() {
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div className={"row"}>
-                    <TrackSettingsComponent className={"col g-0"} settings={this.props.track.trackSettings}/>
+                <div className={"row d-flex flex-row no-gutters"}>
+                    <TrackSettingsComponent className={"col-auto"} settings={this.props.track.trackSettings}/>
 
                     {/* Note selection & rythm/bpm */}
-                    <div className={"col-auto g-0"}>
-                        <div className={"row gy-0"}>
+                    <div className={"col-auto d-flex flex-column justify-content-start"}>
+                        <h5 className={"text-center"}>NOTE SELECTION</h5>
+                        <div className={"row g-0"}>
                             {this.#renderNoteButtons()}
                         </div>
-                        <div className={"row gy-0"}>
-                            <div className={"col flex-column g-0 align-content-center"}>
+                        <div className={"w-100 h-25"}></div>
+                        <div className={"row g-0"}>
+                            <div className={"col d-flex flex-column"}>
                                 <p className={"text-center"}>BPM</p>
                                 <input type={"number"} min={20} max={300}
-                                       className={""}
+                                       className={"w-50 align-self-center"}
                                        value={this.state.localBpm}
                                        onChange={(e) => this.setState({localBpm: e.target.value})}/>
                             </div>
-                            <div className={"col g-0"}>
-                                <p className={"text-center"}>RYTHM</p>
+                            <div className={"col d-flex flex-column"}>
+                                <p className={"text-center gy-0"}>RYTHM</p>
                                 <input type={"number"} min={2} max={10}
+                                       className={"w-50 align-self-center"}
                                        value={this.state.localRythm}
                                        onChange={(e) => this.setState({localRythm: e.target.value})}/>
                             </div>
@@ -122,11 +125,14 @@ class TrackControlComponent extends React.Component {
                     </div>
 
                     {/* Playback control */}
-                    <div className={"col-auto g-0"}>
+                    <div className={"col-auto d-flex flex-column"}>
+                        <h5 className={"text-center"}>VOLUME</h5>
                         <div className={"row g-0"}>
                             <input type={"range"} min={-32} max={32} value={this.state.volume}
                             onChange={(e) => this.setState({volume: e.target.value})}/>
                         </div>
+                        <div className={"w-100 h-50"}>{/*Spacer*/}</div>
+                        <h5 className={"text-center"}>PLAYBACK</h5>
                         <div className={"row g-0"}>
                             <button className={"col playback-control"}
                                 onClick={this.#handlePlayButtonClick}>
