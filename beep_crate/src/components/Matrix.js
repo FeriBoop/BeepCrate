@@ -7,6 +7,8 @@ import MatrixHeader from './MatrixHeader';
 import MatrixRow from './MatrixRow';
 import Track from "../structures/Track.mjs"; // Ensure the path is correct
 import Title from "./Title";
+import { exportToJson, importFromJson } from "../structures/ImportExport/ImportAndExport.mjs";
+import Tone from "../structures/Tone.mjs";
 
 const Matrix = () => {
     const initialVisibleColumns = Math.floor(window.innerWidth / 40);
@@ -16,6 +18,7 @@ const Matrix = () => {
     const [currentNote, setCurrentNote] = useState('');
     const [offset, setOffset] = useState(0);
     const [track, setTrack] = useState(new Track("UserTrack", '#FFFFFF')); // Track for user notes
+    const fileInputRef = useRef(null);
 
     const scrollInterval = useRef(null);
 
@@ -34,6 +37,70 @@ const Matrix = () => {
         eighth: 2,
         sixteenth: 1
     };
+
+
+    const [importedTrack, setImportedTrack] = useState();
+
+    const handleLoadTrack = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (event) => {
+        importFromJson(event, (track) => {
+            console.log("Imported Track:", track);
+            setImportedTrack(track); // Save the track in state
+        });
+    };
+
+    useEffect(() => {
+        if (importedTrack) {
+            // Calculate the required number of columns based on the imported track
+            const maxColumnsNeeded = importedTrack.tones.reduce((max, tone) => {
+                const notes = tone.getAllNotes();
+                return Math.max(max, notes.size); // Get the maximum number of notes across all tones
+            }, 0);
+    
+            // Update the total columns if the imported data requires more
+            if (maxColumnsNeeded > totalColumns) {
+                addColumns(maxColumnsNeeded - totalColumns); // Add necessary columns
+            }
+    
+            const newMatrixData = Array(60).fill().map(() => Array(totalColumns).fill(''));
+            importedTrack.tones.forEach((tone, rowIndex) => {
+                const notes = tone.getAllNotes(); // Get the unitBlocks Map
+                notes.forEach((length, x) => { // Correctly destructure length and x
+                    let length2;
+                    switch (length) {
+                        case "1n":
+                            length2 = "whole";
+                            break;
+                        case "2n":
+                            length2 = "half";
+                            break;
+                        case "4n":
+                            length2 = "quarter";
+                            break;
+                        case "8n":
+                            length2 = "eighth";
+                            break;
+                        case "16n":
+                            length2 = "sixteenth";
+                            break;
+                        default:
+                            console.warn(`Unknown note length: ${length}`);
+                            return;
+                    }
+                    if (x < totalColumns) {
+                        newMatrixData[rowIndex][x] = length2;
+                    }
+                });
+            });
+            setMatrixData(newMatrixData);
+            setTrack(importedTrack);
+        }
+    }, [importedTrack, totalColumns]);
+    
+    
 
     const addColumns = (num) => {
         setTotalColumns(prev => prev + num);
@@ -147,9 +214,24 @@ const Matrix = () => {
         await track.playFromIndex(); // Call the play method on the Track instance
     };
 
+    const handleSave = () => {
+        if (track) {
+            track.exportToAFile("testExport.json")
+        }
+    }
+
     return (
         <div className="matrix-container">
             <Title/>
+            <button className="loadBtn" onClick={handleLoadTrack}>Load Track</button>
+            <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: "none" }}
+                accept=".json"
+                onChange={handleFileChange}
+            />
+            <button className="loadBtn" onClick={handleSave}>Save</button>
             <NoteSelector setCurrentNote={setCurrentNote} />
             <MatrixNavigation 
                 handleLeftArrow={handleLeftArrow} 
