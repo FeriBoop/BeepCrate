@@ -2,7 +2,7 @@ label.image-radio{
 
 }
 
-label.image-radio:has(> input:checked) {
+label.image-radio:has(> input:checked) > img{
     background-color: lightgray;
 }
 
@@ -15,3 +15,4 @@ label.image-radio > input{
     width: 0;
     height: 0;
 }
+

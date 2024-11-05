@@ -1,5 +1,5 @@
 button.playback-control{
-    max-width: 64px;
+    max-width: 50px;
     max-height: 100%;
 }
 
@@ -9,5 +9,5 @@ button.playback-control > img {
 }
 
 .note-radio{
-    max-width: 64px;
+    max-width: 50px;
 }
