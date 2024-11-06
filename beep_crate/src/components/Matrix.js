@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import '../style/Matrix.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import NoteSelector from './NoteSelector';
@@ -7,7 +7,8 @@ import MatrixHeader from './MatrixHeader';
 import MatrixRow from './MatrixRow';
 import Track from "../structures/Track.mjs"; // Ensure the path is correct
 import Title from "./Title";
-import { exportToJson, importFromJson } from "../structures/ImportExport/ImportAndExport.mjs";
+import TrackControlComponent from "./TrackControlComponent";
+import {exportToJson, importFromJson} from "../structures/ImportExport/ImportAndExport.mjs";
 import Tone from "../structures/Tone.mjs";
 
 const Matrix = () => {
@@ -15,9 +16,11 @@ const Matrix = () => {
     const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
     const [totalColumns, setTotalColumns] = useState(initialVisibleColumns);
     const [matrixData, setMatrixData] = useState(Array(60).fill().map(() => Array(initialVisibleColumns).fill('')));
-    const [currentNote, setCurrentNote] = useState('');
+    const [currentNote, setCurrentNote] = useState('whole');
     const [offset, setOffset] = useState(0);
     const [track, setTrack] = useState(new Track("UserTrack", '#FFFFFF')); // Track for user notes
+    const [playPosition, setPlayPosition] = useState("start");
+
     const fileInputRef = useRef(null);
 
     const scrollInterval = useRef(null);
@@ -59,12 +62,12 @@ const Matrix = () => {
                 const notes = tone.getAllNotes();
                 return Math.max(max, notes.size); // Get the maximum number of notes across all tones
             }, 0);
-    
+
             // Update the total columns if the imported data requires more
             if (maxColumnsNeeded > totalColumns) {
                 addColumns(maxColumnsNeeded - totalColumns); // Add necessary columns
             }
-    
+
             const newMatrixData = Array(60).fill().map(() => Array(totalColumns).fill(''));
             importedTrack.tones.forEach((tone, rowIndex) => {
                 const notes = tone.getAllNotes(); // Get the unitBlocks Map
@@ -96,7 +99,7 @@ const Matrix = () => {
                             console.warn(`Unknown note length: ${length}`);
                             return;
                     }
-                    
+
                     // Fill the cells based on the length
                     for (let i = 0; i < cellCount; i++) {
                         if (x + i < totalColumns) {
@@ -109,8 +112,7 @@ const Matrix = () => {
             setTrack(importedTrack);
         }
     }, [importedTrack, totalColumns]);
-    
-    
+
 
     const addColumns = (num) => {
         setTotalColumns(prev => prev + num);
@@ -162,18 +164,16 @@ const Matrix = () => {
         const cellCount = length;
         const adjustedCol = col + offset;
         const endColumn = adjustedCol + length;
-    
-        // Determine if extra columns are needed to fit the note length
+// Determine if extra columns are needed to fit the note length
         let extraColumnsNeeded = Math.max(0, endColumn - totalColumns);
         await expandToFitNote(extraColumnsNeeded);
-    
-        // Check if any cell in the range already has a note
+// Check if any cell in the range already has a note
         const isOccupied = matrixData[row].slice(adjustedCol, endColumn).some(cell => cell !== '');
         if (isOccupied) {
             alert("Please remove the existing note first.");
             return;
         }
-    
+
         // Determine the note symbol (e.g., "4n") based on the length
         let length2;
         switch (length) {
@@ -195,17 +195,16 @@ const Matrix = () => {
             default:
                 length2 = "4n";
         }
-    
-        // Insert the note only at the first cell in the range in `track`
+// Insert the note only at the first cell in the range in `track`
         track.tones[row].insertNewNote(adjustedCol, length2);
-    
+
         // Update the matrix data to store both the note length and start index
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
-                    ? rowData.map((cell, colIndex) => 
-                        (colIndex >= adjustedCol && colIndex < endColumn) 
-                            ? { note: currentNote, startIndex: adjustedCol, cellCount } 
+                    ? rowData.map((cell, colIndex) =>
+                        (colIndex >= adjustedCol && colIndex < endColumn)
+                            ? { note: currentNote, startIndex: adjustedCol, cellCount }
                             : cell
                     )
                     : rowData
@@ -213,36 +212,41 @@ const Matrix = () => {
             return updatedData;
         });
     };
-    
-    
+
+
     const handleRightClick = (event, row, col) => {
         event.preventDefault();
         const actualCol = col + offset;
-    
-        // Find the note that starts at the clicked column
+// Find the note that starts at the clicked column
         const noteData = matrixData[row][actualCol];
         if (!noteData || !noteData.note) {
             return; // No note at the clicked position
         }
-    
+
         const { startIndex, cellCount } = noteData;
         const endColumn = startIndex + cellCount;
-    
+
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
-                    ? rowData.map((cell, colIndex) => 
+                    ? rowData.map((cell, colIndex) =>
                         (colIndex >= startIndex && colIndex < endColumn) ? '' : cell
                     )
                     : rowData
             );
-    
+
             // Remove the note only from the track at the correct start column
             track.tones[row].removeNote(startIndex);
-    
+
             return updatedData;
         });
     };
+
+    const handlePlayChanged = async (playing) => {
+        if (!playing) await track.stopPlayingTrack()
+        else if(playPosition === "index") await track.playFromIndex();
+        else if(playPosition === "start") await track.playFromBeginning();
+    }
 
     const handlePlay = async () => {
         console.log(matrixData);
@@ -258,35 +262,44 @@ const Matrix = () => {
     return (
         <div className="matrix-container">
             <Title/>
-            <button onClick={handleLoadTrack}>Load Track</button>
-            <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                accept=".json"
-                onChange={handleFileChange}
+            <div className={"d-flex flex-row align-content-start"}>
+                <TrackControlComponent track={track}
+                                       onSelectedNoteChanged={setCurrentNote}
+                                       onPlayingChanged={handlePlayChanged}
+                                       onRewindToIndex={() => {setPlayPosition("index")}}
+                                       onRewindToBeginning={() => {setPlayPosition("start")}}
+                />
+                {/* Load/save buttons*/}
+                <button onClick={handleLoadTrack}>Load Track</button>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{display: "none"}}
+                    accept=".json"
+                    onChange={handleFileChange}
+                />
+                <button onClick={handleSave}>Save</button>
+            </div>
+
+            <MatrixNavigation
+                handleLeftArrow={handleLeftArrow}
+                handleRightArrow={handleRightArrow}
+                startScrolling={startScrolling}
+                stopScrolling={stopScrolling}
             />
-            <button  onClick={handleSave}>Save</button>
-            <NoteSelector setCurrentNote={setCurrentNote} />
-            <MatrixNavigation 
-                handleLeftArrow={handleLeftArrow} 
-                handleRightArrow={handleRightArrow} 
-                startScrolling={startScrolling} 
-                stopScrolling={stopScrolling} 
-            />
-            <button onClick={handlePlay}>Play Track</button> {/* Play button for the track */}
+            {/* Play button for the track */}
             <div className="matrix">
-                <MatrixHeader visibleColumns={visibleColumns} offset={offset} />
+                <MatrixHeader visibleColumns={visibleColumns} offset={offset}/>
                 {matrixData.map((row, rowIndex) => (
-                    <MatrixRow 
-                        key={rowIndex} 
-                        tones={tones} 
-                        row={row} 
-                        rowIndex={rowIndex} 
-                        offset={offset} 
-                        visibleColumns={visibleColumns} 
-                        handleClick={handleClick} 
-                        handleRightClick={handleRightClick} 
+                    <MatrixRow
+                        key={rowIndex}
+                        tones={tones}
+                        row={row}
+                        rowIndex={rowIndex}
+                        offset={offset}
+                        visibleColumns={visibleColumns}
+                        handleClick={handleClick}
+                        handleRightClick={handleRightClick}
                     />
                 ))}
             </div>
