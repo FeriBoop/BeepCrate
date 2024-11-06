@@ -44,7 +44,8 @@ class TrackControlComponent extends React.Component {
 
         if (prevState.localBpm !== this.state.localBpm) Globals.setBpm(this.state.localBpm)
         if (prevState.localRythm !== this.state.localRythm) Globals.setBeats(this.state.localRythm);
-        if (prevState.volume !== this.state.volume) this.props.track.volume = this.state.volume;
+        if (prevState.volume !== this.state.volume)
+            this.props.track.volume = this.state.volume;
         if(prevState.playing !== this.state.playing){
             if(this.props.onPlayingChanged) this.props.onPlayingChanged(this.state.playing);
         }
@@ -79,7 +80,7 @@ class TrackControlComponent extends React.Component {
             let label = noteSymbols[key];
 
             el.push(
-                <label className={"col image-radio note-radio"}>
+                <label className={"col image-radio note-radio"} key={key}>
                     <img src={`icons/note-${key}.svg`} alt={key}/>
                     <input type={"radio"} value={key} checked={this.state.selectedNote === key}
                            name={"noteSelection"}

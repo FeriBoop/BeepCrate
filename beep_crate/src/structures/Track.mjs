@@ -182,7 +182,7 @@ export default class Track {
             await audioContext.resume(); //updates audioContext if it is suspended
             console.log("Audio context resumed");
         }
-        this.#PolySynth.play(this.#tones, this.#volume); //plays all tones
+        this.#PolySynth.play(this.#tones, this.volume); //plays all tones
     }
 
     /** Function for playing song from specified index
@@ -201,7 +201,7 @@ export default class Track {
             await audioContext.resume(); //gets context of audio - because ToneLibrary.js requires it for working
             console.log("Audio context resumed");
         }
-        this.#PolySynth.play(this.#tones, this.#volume, TRACK_PLAY_POSITION); //plays tones from x index onwards
+        this.#PolySynth.play(this.#tones, this.volume, TRACK_PLAY_POSITION); //plays tones from x index onwards
     }
 
     /** Function that calls function to stop all tones (including scheduled ones)

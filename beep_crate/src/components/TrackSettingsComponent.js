@@ -10,23 +10,23 @@ import './SharedStyle.css'
  */
 export class TrackSettingsComponent extends React.Component {
 
-    constructor({settings: settings}) {
-        super(arguments);
+    constructor(props) {
+        super(props);
         this.state = {
-            waveType: settings.waveType,
-            detune: settings.detune,
-            attack: settings.attack,
-            decay: settings.decay,
-            sustain: settings.sustain,
-            release: settings.release,
-            filterType: settings.filterType,
-            cutoffFrequency: settings.cutoffFrequency,
-            q: settings.q,
-            rolloff: settings.rolloff,
-            reverbAmount: settings.reverbAmount,
-            cachedReverbAmount: settings.reverbAmount ?? 0,
-            delayTime: settings.delayTime,
-            cachedDelayTime: settings.delayTime ?? 0
+            waveType: props.settings.waveType,
+            detune: props.settings.detune,
+            attack: props.settings.attack,
+            decay: props.settings.decay,
+            sustain: props.settings.sustain,
+            release: props.settings.release,
+            filterType: props.settings.filterType,
+            cutoffFrequency: props.settings.cutoffFrequency,
+            q: props.settings.q,
+            rolloff: props.settings.rolloff,
+            reverbAmount: props.settings.reverbAmount,
+            cachedReverbAmount: props.settings.reverbAmount ?? 0,
+            delayTime: props.settings.delayTime,
+            cachedDelayTime: props.settings.delayTime ?? 0
         }
     }
 
@@ -79,7 +79,7 @@ export class TrackSettingsComponent extends React.Component {
         for (let option in enumType) {
             let val = enumType[option];
             selects.push(// Create options with enum values, or 'None' if value is null
-                <option value={val ?? "none"}>{val ?? "none"}</option>)
+                <option key={val ?? "none"} value={val ?? "none"}>{val ?? "none"}</option>)
         }
         return selects;
     }
@@ -92,7 +92,8 @@ export class TrackSettingsComponent extends React.Component {
         for (let type in WaveType) {
             let val = WaveType[type];
             buttons.push(<label className={"image-radio no-gutters"}
-                                style={{maxWidth: "64px"}}>
+                                style={{maxWidth: "64px"}}
+                                key={val}>
                 <input type={"radio"}
                        name={"waveSelect"}
                        checked={this.state.waveType === val}
@@ -239,7 +240,7 @@ export class TrackSettingsComponent extends React.Component {
                                        min={0} max={1}
                                        step={0.01}
                                        disabled={this.state.reverbAmount === null}
-                                       value={this.state.reverbAmount}
+                                       value={this.state.reverbAmount ?? this.state.cachedReverbAmount}
                                        onChange={this.#createInputHandler("reverbAmount")}
                             /></td>
                         </tr>
@@ -257,7 +258,7 @@ export class TrackSettingsComponent extends React.Component {
                                        min={0} max={100}
                                        step={0.1}
                                        disabled={this.state.delayTime === null}
-                                       value={this.state.delayTime}
+                                       value={this.state.delayTime ?? this.state.cachedDelayTime}
                                        onChange={this.#createInputHandler("delayTime")}
                             /></td>
                         </tr>
