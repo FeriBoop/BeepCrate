@@ -70,28 +70,38 @@ const Matrix = () => {
                 const notes = tone.getAllNotes(); // Get the unitBlocks Map
                 notes.forEach((length, x) => { // Correctly destructure length and x
                     let length2;
+                    let cellCount;
                     switch (length) {
                         case "1n":
+                            cellCount = noteLengths.whole;
                             length2 = "whole";
                             break;
                         case "2n":
+                            cellCount = noteLengths.half;
                             length2 = "half";
                             break;
                         case "4n":
+                            cellCount = noteLengths.quarter;
                             length2 = "quarter";
                             break;
                         case "8n":
+                            cellCount = noteLengths.eighth;
                             length2 = "eighth";
                             break;
                         case "16n":
+                            cellCount = noteLengths.sixteenth;
                             length2 = "sixteenth";
                             break;
                         default:
                             console.warn(`Unknown note length: ${length}`);
                             return;
                     }
-                    if (x < totalColumns) {
-                        newMatrixData[rowIndex][x] = length2;
+                    
+                    // Fill the cells based on the length
+                    for (let i = 0; i < cellCount; i++) {
+                        if (x + i < totalColumns) {
+                            newMatrixData[rowIndex][x + i] = length2; // Fill the cell with the tone name
+                        }
                     }
                 });
             });
@@ -151,11 +161,19 @@ const Matrix = () => {
         const length = noteLengths[currentNote];
         const adjustedCol = col + offset;
         const endColumn = adjustedCol + length;
-    
+        
+        // Determine if extra columns are needed to fit the note length
         let extraColumnsNeeded = Math.max(0, endColumn - totalColumns);
         await expandToFitNote(extraColumnsNeeded);
     
-        // Determine length2 based on the current note length
+        // Check if any cell in the range already has a note
+        const isOccupied = matrixData[row].slice(adjustedCol, endColumn).some(cell => cell !== '');
+        if (isOccupied) {
+            alert("Please remove the existing note first.");
+            return;
+        }
+    
+        // Determine the note symbol (e.g., "4n") based on the length
         let length2;
         switch (length) {
             case 16:
@@ -177,34 +195,43 @@ const Matrix = () => {
                 length2 = "4n";
         }
     
+        // Insert the note only at the first cell in the range in `track`
+        track.tones[row].insertNewNote(adjustedCol, length2);
+    
+        // Update the matrix data to color the range
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
-                    ? rowData.map((cell, colIndex) => {
-                        if (colIndex === adjustedCol) { // Only color one square
-                            track.tones[row].insertNewNote(adjustedCol, length2); // Insert note with variable length
-                            return currentNote; // Set current note in the cell
-                        }
-                        return cell;
-                    })
+                    ? rowData.map((cell, colIndex) => 
+                        (colIndex >= adjustedCol && colIndex < endColumn) ? currentNote : cell
+                    )
                     : rowData
             );
             return updatedData;
         });
     };
     
-
+    
     const handleRightClick = (event, row, col) => {
         event.preventDefault();
         const actualCol = col + offset;
-        
+    
+        // Get the length of the note at the specified column
+        const length = noteLengths[matrixData[row][actualCol]];
+        const endColumn = actualCol + length;
+    
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
-                    ? rowData.map((cell, colIndex) => colIndex === actualCol ? '' : cell)
+                    ? rowData.map((cell, colIndex) => 
+                        (colIndex >= actualCol && colIndex < endColumn) ? '' : cell
+                    )
                     : rowData
             );
-            track.tones[row].removeNote(actualCol); // Remove the note from the track
+            
+            // Remove the note only from the first cell in the range in `track`
+            track.tones[row].removeNote(actualCol);
+    
             return updatedData;
         });
     };
@@ -223,7 +250,7 @@ const Matrix = () => {
     return (
         <div className="matrix-container">
             <Title/>
-            <button className="loadBtn" onClick={handleLoadTrack}>Load Track</button>
+            <button onClick={handleLoadTrack}>Load Track</button>
             <input
                 type="file"
                 ref={fileInputRef}
@@ -231,7 +258,7 @@ const Matrix = () => {
                 accept=".json"
                 onChange={handleFileChange}
             />
-            <button className="loadBtn" onClick={handleSave}>Save</button>
+            <button  onClick={handleSave}>Save</button>
             <NoteSelector setCurrentNote={setCurrentNote} />
             <MatrixNavigation 
                 handleLeftArrow={handleLeftArrow} 
