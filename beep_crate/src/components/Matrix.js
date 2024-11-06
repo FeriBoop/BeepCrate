@@ -100,7 +100,7 @@ const Matrix = () => {
                     // Fill the cells based on the length
                     for (let i = 0; i < cellCount; i++) {
                         if (x + i < totalColumns) {
-                            newMatrixData[rowIndex][x + i] = length2; // Fill the cell with the tone name
+                            newMatrixData[rowIndex][x + i] = { note: length2, startIndex: x, cellCount }; // Fill the cell with the tone name
                         }
                     }
                 });
@@ -159,9 +159,10 @@ const Matrix = () => {
 
     const handleClick = async (row, col) => {
         const length = noteLengths[currentNote];
+        const cellCount = length;
         const adjustedCol = col + offset;
         const endColumn = adjustedCol + length;
-        
+    
         // Determine if extra columns are needed to fit the note length
         let extraColumnsNeeded = Math.max(0, endColumn - totalColumns);
         await expandToFitNote(extraColumnsNeeded);
@@ -198,12 +199,14 @@ const Matrix = () => {
         // Insert the note only at the first cell in the range in `track`
         track.tones[row].insertNewNote(adjustedCol, length2);
     
-        // Update the matrix data to color the range
+        // Update the matrix data to store both the note length and start index
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
                     ? rowData.map((cell, colIndex) => 
-                        (colIndex >= adjustedCol && colIndex < endColumn) ? currentNote : cell
+                        (colIndex >= adjustedCol && colIndex < endColumn) 
+                            ? { note: currentNote, startIndex: adjustedCol, cellCount } 
+                            : cell
                     )
                     : rowData
             );
@@ -216,28 +219,33 @@ const Matrix = () => {
         event.preventDefault();
         const actualCol = col + offset;
     
-        // Get the length of the note at the specified column
-        const length = noteLengths[matrixData[row][actualCol]];
-        const endColumn = actualCol + length;
+        // Find the note that starts at the clicked column
+        const noteData = matrixData[row][actualCol];
+        if (!noteData || !noteData.note) {
+            return; // No note at the clicked position
+        }
+    
+        const { startIndex, cellCount } = noteData;
+        const endColumn = startIndex + cellCount;
     
         setMatrixData(prevData => {
             const updatedData = prevData.map((rowData, rowIndex) =>
                 rowIndex === row
                     ? rowData.map((cell, colIndex) => 
-                        (colIndex >= actualCol && colIndex < endColumn) ? '' : cell
+                        (colIndex >= startIndex && colIndex < endColumn) ? '' : cell
                     )
                     : rowData
             );
-            
-            // Remove the note only from the first cell in the range in `track`
-            track.tones[row].removeNote(actualCol);
+    
+            // Remove the note only from the track at the correct start column
+            track.tones[row].removeNote(startIndex);
     
             return updatedData;
         });
     };
 
-
     const handlePlay = async () => {
+        console.log(matrixData);
         await track.playFromIndex(); // Call the play method on the Track instance
     };
 
