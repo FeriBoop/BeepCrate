@@ -12,16 +12,24 @@ import {exportToJson, importFromJson} from "../structures/ImportExport/ImportAnd
 import Tone from "../structures/Tone.mjs";
 
 const Matrix = () => {
+    const handlePlaybackStop = () => {
+        console.log("Playback stopped")
+        if(trackControlRef.current) {
+            trackControlRef.current.setIsPlaying(false);
+        }
+    }
+
     const initialVisibleColumns = Math.floor(window.innerWidth / 40);
     const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
     const [totalColumns, setTotalColumns] = useState(initialVisibleColumns);
     const [matrixData, setMatrixData] = useState(Array(60).fill().map(() => Array(initialVisibleColumns).fill('')));
     const [currentNote, setCurrentNote] = useState('whole');
     const [offset, setOffset] = useState(0);
-    const [track, setTrack] = useState(new Track("UserTrack", '#FFFFFF')); // Track for user notes
+    const [track, setTrack] = useState(new Track("UserTrack", '#FFFFFF', 5, 0, handlePlaybackStop)); // Track for user notes
     const [playPosition, setPlayPosition] = useState("start");
 
     const fileInputRef = useRef(null);
+    const trackControlRef = useRef(null);
 
     const scrollInterval = useRef(null);
 
@@ -109,6 +117,8 @@ const Matrix = () => {
                 });
             });
             setMatrixData(newMatrixData);
+            // Add handler to new object
+            importedTrack.onPlaybackStopped = handlePlaybackStop;
             setTrack(importedTrack);
         }
     }, [importedTrack, totalColumns]);
@@ -260,6 +270,7 @@ const Matrix = () => {
             <Title/>
             <div className={"d-flex flex-row align-content-start"}>
                 <TrackControlComponent track={track}
+                                       ref={trackControlRef}
                                        onSelectedNoteChanged={setCurrentNote}
                                        onPlayingChanged={handlePlayChanged}
                                        onRewindToIndex={() => {setPlayPosition("index")}}

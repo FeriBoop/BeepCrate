@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import {BPM, BEATS} from "../structures/GlobalVariables.mjs";
+import * as Globals from "../structures/GlobalVariables.mjs";
 
 /**
  * Class ToneJsManager
@@ -12,15 +12,22 @@ export default class PolySynthManager {
     #filter;                   // Tone.js filter instance
     #reverb;                   // Tone.js reverb instance
     #delay;                    // Tone.js delay instance
+    #playbackStopped;          // Callback for end of playback
+
+    setOnPlaybackStopped(callback){
+        this.#playbackStopped = callback;
+    }
     //#endregion
 
     //#region constructor and initialize methods
     /** Default constructor
      * @param trackSettings
      * @param numberOfOctaves
+     * @param onPlaybackStopped
      */
-    constructor(trackSettings, numberOfOctaves) {
+    constructor(trackSettings, numberOfOctaves, onPlaybackStopped = null) {
         this.initializePolySynth(trackSettings, numberOfOctaves); // Calling initializer method
+        this.#playbackStopped = onPlaybackStopped
     }
 
     /** Initialize polySynth object
@@ -149,21 +156,34 @@ export default class PolySynthManager {
     async play(tones, volume, startIndex = 0) {
         this.#polySynth.volume.value = volume;
         this.#connectSynthToMaster(); // call connect to output method
-        const now = Tone.Transport.seconds + 0.5;  // Get the current transport time
-        Tone.Transport.bpm.value = BPM;       // Set the tempo from global variable
-        Tone.Transport.timeSignature = BEATS;    // Set the time signature from global variable
+        const now = Tone.getTransport().seconds + 0.5;  // Get the current transport time
+        let bpm = Globals.BPM;
+        console.log("Setting ToneJsManager BPM:", bpm);
+        Tone.getTransport().bpm.value = bpm;       // Set the tempo from global variable
+        console.log("Setting ToneJsManager BEATS", Globals.BEATS);
+        Tone.getTransport().timeSignature = Globals.BEATS;    // Set the time signature from global variable
 
         const scheduledNotes = orderTones(tones, now, startIndex);   // Array to store notes with their play time and duration - include notes only with play time greater or equal to startIndex
 
         // Schedule the notes for future play
+        let endTime = 0;
         scheduledNotes.forEach(note => {
-            Tone.Transport.schedule((time) => {
+            Tone.getTransport().schedule((time) => {
                 console.log(`Playing note ${note.name} at time: ${time}`);
                 this.#polySynth.triggerAttackRelease(note.name, note.duration, time); //calling Tone.js function for playing the specified tone with specified duration ('1n', '2n', '4n'...)
             }, note.timeToPlay);
+            endTime = Math.max(endTime, note.timeToPlay + Tone.Time(note.duration).toSeconds())
         });
+        // playback end
+        Tone.getTransport().scheduleOnce((time) => {
+            console.log(`Playback over`);
+            if (this.#playbackStopped) this.#playbackStopped();
+        }, endTime)
+
         // Start the transport (if not already started)
-        if (Tone.Transport.state !== "started") Tone.Transport.start();
+        console.log("Starting transport")
+        if (Tone.getTransport().state !== "started") Tone.getTransport().start();
+        else console.log("Transport not started: already running")
     }
 
     /** Stop all Tones method
