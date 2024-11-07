@@ -20,6 +20,7 @@ export default class Track {
     #tones = []; //array of tones
     #trackSettings; //instance of trackSettings
     #PolySynth; //instance of ToneJsManager class
+    #onPlaybackStopped; // Callback for playback stopping
     //#endregion
 
     //#region constructor
@@ -28,15 +29,17 @@ export default class Track {
      * @param color - color that defines track inside ui
      * @param numberOfOctaves - number between 1 and 8 - defines number of octaves
      * @param volume - volume of the Track (0-100)
+     * @param onPlaybackStopped - callback for when playback plays the last note
      */
-    constructor(title, color, numberOfOctaves = 5, volume = 0) {
+    constructor(title, color, numberOfOctaves = 5, volume = 0, onPlaybackStopped = null) {
         this.#title = title;
         this.#color = color;
         this.#volume = volume
         this.#numberOfOctaves = numberOfOctaves
         this.#tones = generateTones(this.#tones, numberOfOctaves);
         this.#trackSettings = new TrackSettings();
-        this.#PolySynth = new PolySynthManager(this.#trackSettings, this.#numberOfOctaves);
+        this.#onPlaybackStopped = onPlaybackStopped
+        this.#PolySynth = new PolySynthManager(this.#trackSettings, this.#numberOfOctaves, this.#onPlaybackStopped);
     }
 
     //#endregion
@@ -146,6 +149,11 @@ export default class Track {
         if (value < 0) this.#volume = 0;
         else if (value > 100) this.#volume = 100;
         else this.#volume = value;
+    }
+
+    set onPlaybackStopped(value){
+        this.#onPlaybackStopped = value;
+        this.#PolySynth.setOnPlaybackStopped(value)
     }
 
 //#endregion
