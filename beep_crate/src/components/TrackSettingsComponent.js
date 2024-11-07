@@ -200,6 +200,7 @@ export class TrackSettingsComponent extends React.Component {
                                min={1}
                                max={22000}
                                step={1}
+                               value={this.state.cutoffFrequency}
                                onChange={this.#createInputHandler("cutoffFrequency")}/>
                         <div className={"col-auto"}>
                             <span className={"input-group-text"}>Hz</span>
@@ -213,7 +214,7 @@ export class TrackSettingsComponent extends React.Component {
                         </div>
                         <select className={"col"}
                                 disabled={this.state.filterType === null}
-                                onChange={this.#createInputHandler("filterType")}
+                                onChange={this.#createInputHandler("rolloff")}
                                 value={this.state.rolloff}
                         >
                             {this.#populateSelect(Rolloff)}

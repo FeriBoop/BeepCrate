@@ -46,7 +46,7 @@ export function generateTones(tones, numberOfOctaves) { //tones is array of tone
         for (let note in noteFrequencies) {
             const frequency = noteFrequencies[note][octave]; //adds frequency e.g. for A5 it is 440Hz
             const noteName = `${note}${octave}`; // e.g., C4, D#/Eb4, A5, etc.
-            tones.push(new Tone(noteName, frequency));
+            tones.unshift(new Tone(noteName, frequency));
         }
     });
 

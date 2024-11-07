@@ -89,26 +89,31 @@ export default class PolySynthManager {
         });
 
         // Update filter settings if applicable
-        if (this.#filter) {
-            this.#filter.type = trackSettings.filterType;               // Update filter type
-            this.#filter.frequency.value = trackSettings.cutoffFrequency; // Update cutoff frequency
-            this.#filter.Q.value = trackSettings.q;                      // Update Q factor (resonance)
-            this.#filter.rolloff = trackSettings.rolloff;                // Update rolloff slope
-        }
-        else if(trackSettings.filterType != null){ //if filter was null create new object
-            this.#filter = new Tone.Filter({
-                type: trackSettings.filterType,    // Filter type ('lowpass', 'highpass', etc.)
-                frequency: trackSettings.cutoffFrequency, // Cutoff frequency
-                Q: trackSettings.q,                // Resonance (Q factor)
-                rolloff: trackSettings.rolloff     // Rolloff slope (-12, -24, etc.)
-            });
+        if (trackSettings.filterType) {
+            if (this.#filter) {
+                this.#filter.type = trackSettings.filterType;               // Update filter type
+                this.#filter.frequency.value = trackSettings.cutoffFrequency; // Update cutoff frequency
+                this.#filter.Q.value = trackSettings.q;                      // Update Q factor (resonance)
+                this.#filter.rolloff = trackSettings.rolloff;                // Update rolloff slope
+            } else { //if filter was null create new object
+                this.#filter = new Tone.Filter({
+                    type: trackSettings.filterType,    // Filter type ('lowpass', 'highpass', etc.)
+                    frequency: trackSettings.cutoffFrequency, // Cutoff frequency
+                    Q: trackSettings.q,                // Resonance (Q factor)
+                    rolloff: trackSettings.rolloff     // Rolloff slope (-12, -24, etc.)
+                });
+            }
+        } else {
+            if (this.#filter) {
+                this.#filter.dispose();
+                this.#filter = null;
+            }
         }
 
         // Update reverb settings if applicable
         if (this.#reverb) {
             this.#reverb.decay = trackSettings.reverbAmount() * 10;  // Update reverb decay time
-        }
-        else if(trackSettings.reverbAmount != null){ //if reverb was null create new object
+        } else if (trackSettings.reverbAmount != null) { //if reverb was null create new object
             if (this.#reverb) {
                 this.#reverb = new Tone.Reverb({
                     decay: trackSettings.reverbAmount * 10,  // Reverb decay time, scaled (0-1) to (0-10 seconds)
@@ -119,8 +124,7 @@ export default class PolySynthManager {
         // Update delay settings if applicable
         if (this.#delay) {
             this.#delay.delayTime.value = trackSettings.delayTime();  // Update delay time
-        }
-        else if(trackSettings.delayTime){ //if delay6 was null create new object
+        } else if (trackSettings.delayTime) { //if delay6 was null create new object
             if (this.#delay) {
                 this.#delay = new Tone.FeedbackDelay({
                     delayTime: trackSettings.delayTime,  // Delay time in seconds
@@ -167,7 +171,7 @@ export default class PolySynthManager {
      */
     stopAll() {
         this.#polySynth.releaseAll();  // Release all active notes
-        Tone.Transport.cancel();  //Clears all scheduled events (notes)
+        Tone.getTransport().cancel();  //Clears all scheduled events (notes)
         this.#disconnect();     //disconnects from output
     }
 
@@ -203,7 +207,7 @@ export default class PolySynthManager {
      * Disconnects all elements from synth
      */
     #disconnect() {
-        if (this.#filter) this.#polySynth.disconnect(this.#filter); //Disconnects filter from synth
+        // if (this.#filter) this.#polySynth.disconnect(this.#filter); //Disconnects filter from synth
         if (this.#reverb) this.#polySynth.disconnect(this.#reverb); //Disconnects reverb from synth
         if (this.#delay) this.#polySynth.disconnect(this.#delay); //Disconnects delay from synth
     }
