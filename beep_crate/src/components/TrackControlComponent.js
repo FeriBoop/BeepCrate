@@ -1,24 +1,24 @@
 import React from 'react';
 import {TrackSettingsComponent} from "./TrackSettingsComponent";
-import './SharedStyle.css'
-import './TrackControlComponent.css'
+import '../style/SharedStyle.css'
+import '../style/TrackControlComponent.css'
 
 let Globals = require("../structures/GlobalVariables.mjs");
 
-const noteSymbols = {
-    whole: "1/1",
-    half: "1/2",
-    quarter: "1/4",
-    eighth: "1/8",
-    sixteenth: "1/16"
-}
+/**
+ * An array of note symbol names.
+ * @type {string[]}
+ */
+const noteSymbols = ["whole", "half", "quarter", "eighth", "sixteenth"]
 
 /**
  * This component is a frontend for track settings and playback control.
- * @prop {(newNote: string) => {}} onSelectedNoteChanged - Callback for when the selected note changes. Its parameter is a string representing the newly selected note
+ * @prop {Track} Track - A mandatory Track object.
+ * @prop {function(string)} onSelectedNoteChanged - Callback for when the selected note changes. Its parameter is a string representing the newly selected note
  * @prop {function(boolean)} onPlayingChanged - Callback for when the playing state changes.
  * @prop {function()} onRewindToIndex - Callback for when the 'Rewind to index' button is pressed.
  * @prop {function()} onRewindToBeginning - Callback for when the 'Rewind to beginning' button is pressed.
+ * @see Track
  */
 class TrackControlComponent extends React.Component {
 
@@ -51,26 +51,41 @@ class TrackControlComponent extends React.Component {
         }
     }
 
+    /**
+     * Sets the playing state.
+     * @param {boolean} playing - true if sound is playing, false otherwise
+     */
     setIsPlaying(playing){
         this.setState({playing: playing});
     }
 
     //#region handlers
 
+    /** @private
+     * Handler for not selection change.
+     */
     #handleNoteSelectChange = (e) => {
         if (e.target.checked && this.state.selectedNote !== e.target.value) {
             this.setState({selectedNote: e.target.value});
         }
     }
-
+    /** @private
+     * Handler for play/pause button clicks .
+     */
     #handlePlayButtonClick = (e) => {
         this.setState({playing: !this.state.playing});
     }
 
+    /** @private
+     * Handler for rewind to index button click.
+     */
     #handleRewindToIndex = (e) => {
         if(this.props.onRewindToIndex) this.props.onRewindToIndex();
     }
 
+    /** @private
+     * handler for rewind to beginning button click.
+     */
     #handleRewindToBeginning = (e) => {
         if(this.props.onRewindToBeginning) this.props.onRewindToBeginning();
     }
@@ -78,10 +93,16 @@ class TrackControlComponent extends React.Component {
     //#endregion
 
     //#region renderers
+
+    /** @private
+     * Creates radio buttons with images for notes.
+     * Assumes each note symbol name has a corresponding 'note-{name}.svg' icon file in public/icons.
+     * @returns {*[]} - An array of <label> elements.
+     * @see noteSymbols
+     */
     #renderNoteButtons() {
         let el = []
-        for (let key in noteSymbols) {
-            let label = noteSymbols[key];
+        for (let key of noteSymbols) {
 
             el.push(
                 <label className={"col image-radio note-radio"} key={key}>
