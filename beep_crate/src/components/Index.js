@@ -3,6 +3,14 @@ import "../style/Index.css";
 import { Link } from "react-router-dom";
 import Title from "./Title";
 
+/**
+ * Index component
+ *
+ * Displays the main welcome page for the BeepCrate app, providing an introduction
+ * to the app's features and quick navigation options to start a new track or view documentation.
+ *
+ * @returns {JSX.Element} The rendered Index component.
+ */
 const Index = () => {
     const fileInputRef = useRef(null);
 
