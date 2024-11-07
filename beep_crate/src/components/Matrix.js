@@ -123,7 +123,6 @@ const Matrix = () => {
         }
     }, [importedTrack, totalColumns]);
 
-
     const addColumns = (num) => {
         setTotalColumns(prev => prev + num);
         setMatrixData(prevData =>
@@ -266,7 +265,7 @@ const Matrix = () => {
     }
 
     return (
-        <div className="mh-100">
+        <div className="vh-100 d-flex flex-column">
             <Title/>
             <div className={"d-flex flex-row align-content-start"}>
                 <TrackControlComponent track={track}
@@ -277,15 +276,17 @@ const Matrix = () => {
                                        onRewindToBeginning={() => {setPlayPosition("start")}}
                 />
                 {/* Load/save buttons*/}
-                <button onClick={handleLoadTrack}>Load Track</button>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{display: "none"}}
-                    accept=".json"
-                    onChange={handleFileChange}
-                />
-                <button onClick={handleSave}>Save</button>
+                <div className={"d-flex flex-column justify-content-center"}>
+                    <button onClick={handleLoadTrack}>Load Track</button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{display: "none"}}
+                        accept=".json"
+                        onChange={handleFileChange}
+                    />
+                    <button onClick={handleSave}>Save</button>
+                </div>
             </div>
 
             <MatrixNavigation
