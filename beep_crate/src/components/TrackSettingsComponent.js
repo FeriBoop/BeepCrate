@@ -6,7 +6,8 @@ import './SharedStyle.css'
 
 /**
  * A component for manipulating track settings. It can set all variables in the TrackSetting class aside from 'volume' and 'isMute'.
- * It requires 'settings' property to be set (a TrackSettings object).
+ * @prop {TrackSettings} settings - mandatory, A TrackSettings object,
+ * @see TrackSettings
  */
 export class TrackSettingsComponent extends React.Component {
 
@@ -32,8 +33,10 @@ export class TrackSettingsComponent extends React.Component {
 
     //#region Handlers
 
-    /***
-     Creates a generic handler which sets the TrackSettings property provided by 'propertyName'. Value in 'nullValue' will be stored as null.
+    /*** @private
+     Creates a value setting handler for the specified TrackSettings property.
+     @prop {string} propertyName - Specified TrackSettings property
+     @prop {any} nullValue - Value which will be stored as null.
      ***/
     #createInputHandler(propertyName, nullValue = null) {
         return (e) => {
@@ -46,8 +49,8 @@ export class TrackSettingsComponent extends React.Component {
         }
     }
 
-    /***
-     Event handler wor the checkbox which enables/disables delayTime.
+    /*** @private
+     Event handler for the checkbox which enables/disables delayTime.
      ***/
     #delayTimeCheckboxChanged = (e) => {
         if (e.target.checked) {
@@ -58,7 +61,9 @@ export class TrackSettingsComponent extends React.Component {
             this.props.settings.delayTime = null;
         }
     }
-
+    /*** @private
+     Event handler for the checkbox which enables/disables reverb.
+     ***/
     #reverbAmountCheckboxChanged = (e) => {
         if (e.target.checked) {
             this.setState({reverbAmount: this.state.cachedReverbAmount});
@@ -73,20 +78,28 @@ export class TrackSettingsComponent extends React.Component {
 
     //#region Content generators
 
-    /// Creates <options> elements for a select
+    /** @private
+     * Creates <option> elements with values defined in the provided enum. Values that are 'null' will be converted to "none" strings.
+     * @param enumType - The enum object.
+     * @returns {*[]} - An array of <option> elements.
+     * @see
+     */
     #populateSelect(enumType) {
         let selects = [];
         for (let option in enumType) {
-            let val = enumType[option];
+            let val = enumType[option] ?? "none";
             selects.push(// Create options with enum values, or 'None' if value is null
-                <option key={val ?? "none"} value={val ?? "none"}>{val ?? "none"}</option>)
+                <option key={val} value={val}>{val}</option>)
         }
         return selects;
     }
 
-    /***
-     Generates radio buttons for the values of WaveType enum.
-     ***/
+    /** @private
+     * Generates radio buttons with images for each value of the WaveType enum.
+     * Assumes each value has a corresponding wave-{value}.svg in public/icons.
+     * @returns {*[]} - An array of <label> elements
+     * @see WaveType
+     */
     #populateWaveTypeRadioButtons() {
         let buttons = [];
         for (let type in WaveType) {
@@ -105,7 +118,14 @@ export class TrackSettingsComponent extends React.Component {
         return buttons;
     }
 
-    /// creates a slider input with label and callback function
+    /** @private
+     * Creates a slider with a label and a numeric input. The value range is set to [0, 1].
+     * @param {string} label - Text to display alongside the slider.
+     * @param onChangeCallback - Value change callback
+     * @param valueGetter - Value tied to control
+     * @param labelWidth - Column width of the label [0-12]
+     * @returns {Element} - The slider element
+     */
     #createSlider(label, onChangeCallback, valueGetter, labelWidth = 2) {
         return (<div className="row d-flex flex-row g-2">
             <div className={"col-" + labelWidth + " d-flex flex-column justify-content-center"}>
