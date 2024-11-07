@@ -1,14 +1,12 @@
 .matrix {
     display: flex;
     flex-direction: column;
-    gap: 4px;
     position: relative;
     overflow-x: auto;
     overflow-y: auto;
     background-color: #fff;
     color: #000; 
     padding-bottom: 20px; /* Padding at the bottom for better spacing */
-    max-height: 75em; /* Set a max height for the matrix */
 }
 
 .matrix-header {
