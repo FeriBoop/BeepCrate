@@ -11,6 +11,11 @@ import TrackControlComponent from "./TrackControlComponent";
 import {exportToJson, importFromJson} from "../structures/ImportExport/ImportAndExport.mjs";
 import Tone from "../structures/Tone.mjs";
 
+/**
+ * Matrix component represents a musical note matrix where users can add,
+ * remove, and manipulate notes across 5 octaves and multiple columns.
+ * The component also supports loading/saving tracks, and playing them.
+ */
 const Matrix = () => {
     const handlePlaybackStop = () => {
         console.log("Playback stopped")
@@ -49,13 +54,19 @@ const Matrix = () => {
         sixteenth: 1
     };
 
-
+    /**
+     * Load a track from a JSON file
+     */
     const [importedTrack, setImportedTrack] = useState();
 
     const handleLoadTrack = () => {
         fileInputRef.current.click();
     };
 
+    /**
+     * Handle file input change event for loading a track from JSON.
+     * @param {*} event - File input change event
+     */
     const handleFileChange = (event) => {
         importFromJson(event, (track) => {
             console.log("Imported Track:", track);
@@ -63,6 +74,9 @@ const Matrix = () => {
         });
     };
 
+    /**
+     * Effect to load imported track data into the matrix when an imported track is set.
+     */
     useEffect(() => {
         if (importedTrack) {
             // Calculate the required number of columns based on the imported track
@@ -122,7 +136,10 @@ const Matrix = () => {
             setTrack(importedTrack);
         }
     }, [importedTrack, totalColumns]);
-
+/**
+     * Add columns to the matrix as needed to fit additional notes.
+     * @param {number} num - Number of columns to add
+     */
     const addColumns = (num) => {
         setTotalColumns(prev => prev + num);
         setMatrixData(prevData =>
@@ -130,6 +147,10 @@ const Matrix = () => {
         );
     };
 
+    /**
+     * Expand columns to fit a note if it overflows the current matrix view.
+     * @param {number} extraColumnsNeeded - Number of extra columns needed
+     */
     const expandToFitNote = async (extraColumnsNeeded) => {
         let columnsToAdd = Math.ceil(extraColumnsNeeded / 4) * 4;
         if (columnsToAdd > 0) {
@@ -138,12 +159,19 @@ const Matrix = () => {
         }
     };
 
+    /**
+     * Navigate left in the matrix, reducing offset if possible.
+     */
     const handleLeftArrow = () => {
         if (offset > 0) {
             setOffset(prev => Math.max(0, prev - 4));
         }
     };
 
+    /**
+     * Start scrolling in the specified direction ('left' or 'right').
+     * @param {string} direction - Direction to scroll
+     */
     const handleRightArrow = () => {
         if (offset + visibleColumns >= totalColumns) {
             addColumns(4);
@@ -151,6 +179,9 @@ const Matrix = () => {
         setOffset(prev => prev + 4);
     };
 
+    /**
+     * Stop scrolling in either direction.
+     */
     const startScrolling = (direction) => {
         if (scrollInterval.current) return;
 
@@ -168,6 +199,11 @@ const Matrix = () => {
         scrollInterval.current = null;
     };
 
+    /**
+     * Handle left-click on a matrix cell to add a note.
+     * @param {number} row - Row index
+     * @param {number} col - Column index
+     */
     const handleClick = async (row, col) => {
         const length = noteLengths[currentNote];
         const cellCount = length;
@@ -222,7 +258,12 @@ const Matrix = () => {
         });
     };
 
-
+/**
+     * Handle right-click on a matrix cell to remove a note.
+     * @param {Event} event - Mouse event for the right-click
+     * @param {number} row - Row index
+     * @param {number} col - Column index
+     */
     const handleRightClick = (event, row, col) => {
         event.preventDefault();
         const actualCol = col + offset;
@@ -251,13 +292,18 @@ const Matrix = () => {
         });
     };
 
+    /**
+     * Play the track
+     */
     const handlePlayChanged = (playing) => {
         if (!playing) track.stopPlayingTrack()
         else if(playPosition === "index") track.playFromIndex().then();
         else if(playPosition === "start") track.playFromBeginning().then();
     }
 
-
+    /**
+     * Save the track to a JSON file
+     */
     const handleSave = () => {
         if (track) {
             track.exportToAFile("testExport.json")
