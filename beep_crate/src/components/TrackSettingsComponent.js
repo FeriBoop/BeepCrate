@@ -2,7 +2,7 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/css/bootstrap-grid.min.css'
 import {WaveType, FilterType, Rolloff} from "../structures/Enums.mjs";
-import './SharedStyle.css'
+import '../style/SharedStyle.css'
 
 /**
  * A component for manipulating track settings. It can set all variables in the TrackSetting class aside from 'volume' and 'isMute'.
