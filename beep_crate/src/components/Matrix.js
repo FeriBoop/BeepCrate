@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from "react";
 import '../style/Matrix.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import NoteSelector from './NoteSelector';
 import MatrixNavigation from './MatrixNavigation';
 import MatrixHeader from './MatrixHeader';
 import MatrixRow from './MatrixRow';
@@ -242,16 +242,12 @@ const Matrix = () => {
         });
     };
 
-    const handlePlayChanged = async (playing) => {
-        if (!playing) await track.stopPlayingTrack()
-        else if(playPosition === "index") await track.playFromIndex();
-        else if(playPosition === "start") await track.playFromBeginning();
+    const handlePlayChanged = (playing) => {
+        if (!playing) track.stopPlayingTrack()
+        else if(playPosition === "index") track.playFromIndex().then();
+        else if(playPosition === "start") track.playFromBeginning().then();
     }
 
-    const handlePlay = async () => {
-        console.log(matrixData);
-        await track.playFromIndex(); // Call the play method on the Track instance
-    };
 
     const handleSave = () => {
         if (track) {
@@ -260,7 +256,7 @@ const Matrix = () => {
     }
 
     return (
-        <div className="matrix-container">
+        <div className="mh-100">
             <Title/>
             <div className={"d-flex flex-row align-content-start"}>
                 <TrackControlComponent track={track}

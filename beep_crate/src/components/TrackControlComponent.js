@@ -51,6 +51,10 @@ class TrackControlComponent extends React.Component {
         }
     }
 
+    setIsPlaying(playing){
+        this.setState({playing: playing});
+    }
+
     //#region handlers
 
     #handleNoteSelectChange = (e) => {
@@ -113,14 +117,17 @@ class TrackControlComponent extends React.Component {
                                 <input type={"number"} min={20} max={300}
                                        className={"w-50 align-self-center"}
                                        value={this.state.localBpm}
-                                       onChange={(e) => this.setState({localBpm: e.target.value})}/>
+                                       onChange={(e) => this.setState({localBpm: e.target.value})}
+                                       disabled={true/* enable when BPM issues are fixed*/}/>
                             </div>
                             <div className={"col d-flex flex-column"}>
                                 <p className={"text-center gy-0"}>RYTHM</p>
                                 <input type={"number"} min={2} max={10}
                                        className={"w-50 align-self-center"}
                                        value={this.state.localRythm}
-                                       onChange={(e) => this.setState({localRythm: e.target.value})}/>
+                                       onChange={(e) => this.setState({localRythm: e.target.value})}
+                                       disabled={true /* enable when BEATS issues are fixed*/}
+                                />
                             </div>
                         </div>
                     </div>
