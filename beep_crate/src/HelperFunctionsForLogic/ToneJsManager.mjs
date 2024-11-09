@@ -259,6 +259,8 @@ function orderTones(tones, now, startIndex) { // tones is map of tones, now is T
     tones.forEach(tone => {
         const notes = tone.getAllNotes();  // Get all the notes for this tone
         notes.forEach((duration, index) => { // for each tone it gets its key (index - start of play) and value (length - 1n, 2n, 4n ,8, 16n)
+            const numberFromIndex = duration.match(/\d+/)[0];
+            console.log(numberFromIndex);
             if (index >= startIndex) {
                 const timeToPlay = calculateTimeOffset(index - startIndex);  // Calculate when to play
 
@@ -267,6 +269,15 @@ function orderTones(tones, now, startIndex) { // tones is map of tones, now is T
                     timeToPlay: now + timeToPlay,  // Absolute play time
                     name: tone.name,               // Name of the note (e.g., 'C4')
                     duration: duration             // Duration of the note (e.g., '4n')
+                });
+            }
+            else if (index + (17 - numberFromIndex) >= startIndex) { // if index is lower than startIndex, bit with lenght it should still be heard
+
+                // Add to the scheduledNotes array
+                scheduledNotes.push({
+                    timeToPlay: now,  // Absolute play time
+                    name: tone.name,               // Name of the note (e.g., 'C4')
+                    duration: ((startIndex - index) + numberFromIndex) + "n"             // Duration of the note (e.g., '4n')
                 });
             }
         });
