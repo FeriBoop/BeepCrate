@@ -50,6 +50,11 @@
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color 0.3s; /* Smooth transition for background color changes */
+    text-align: center;
+}
+
+.matrix-cell-header.play-index{
+    background-color: #4CAF50 !important;
 }
 
 .matrix-cell{

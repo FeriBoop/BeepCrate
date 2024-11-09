@@ -133,7 +133,7 @@ export class TrackSettingsComponent extends React.Component {
             </div>
             <div className={"col d-flex flex-column justify-content-center"}>
                 <input type={"range"}
-                       className={"w-100 align-self-center"}
+                       className={"w-100 align-self-stretch"}
                        onChange={onChangeCallback}
                        value={valueGetter}
                        min={0} max={1}
@@ -155,36 +155,35 @@ export class TrackSettingsComponent extends React.Component {
     //#endregion
 
     render() {
-        return (<div className={(this.props.className === undefined ? "" : this.props.className)}
+        return (<div className={this.props.className}
                      style={this.props.style}>
-            <div className="row no-gutters">
+            <div className="d-flex flex-column no-gutters">
 
                 {/*First section - Wave settings*/}
-                <div className="col-auto">
+                <div className="">
                     <h5 className={"text-center"}>WAVE</h5>
-                    <div className="row g-0">
+                    <div className="d-flex flex-column g-0 justify-content-center">
                         {/* Wave type selection*/}
-                        <div className={"col d-flex flex-column"}>
+                        <div className={"row d-flex flex-row g-0"}>
                             {this.#populateWaveTypeRadioButtons()}
                         </div>
-                        <div className={"col d-flex flex-column align-content-center"}>
-                            <span className="text-center">1200</span>
+                        <div className={"row d-flex flex-row-reverse justify-content-stretch align-content-center"}>
+                            <span className="col-auto text-center">1200</span>
                             <input type={"range"}
-                                   className={"align-self-stretch"}
-                                   style={{writingMode: "vertical-lr", direction: "rtl"}}
+                                   className={"col"}
                                    min={-1200} max={1200}
                                    step={1}
                                    value={this.state.detune}
                                    onChange={this.#createInputHandler("detune")}
                             />
-                            <span className="text-center">-1200</span>
+                            <span className="col-auto text-center">-1200</span>
                         </div>
                     </div>
 
                 </div>
 
                 {/* Second section - Envelope settings*/}
-                <div className="col-auto d-flex flex-column">
+                <div className="d-flex flex-column">
                     <h5 className={"text-center"}>ENVELOPE</h5>
                     {this.#createSlider("ATT", this.#createInputHandler("attack"), this.state.attack)}
                     {this.#createSlider("DEC", this.#createInputHandler("decay"), this.state.decay)}
@@ -193,7 +192,7 @@ export class TrackSettingsComponent extends React.Component {
                 </div>
 
                 {/* Third section - Filter settings*/}
-                <div className="col-auto d-flex flex-column g-0">
+                <div className="d-flex flex-column g-0">
                     <h5 className={"text-center"}>FILTER</h5>
 
                     {/* Filter type */}
@@ -246,7 +245,7 @@ export class TrackSettingsComponent extends React.Component {
                 </div>
 
                 {/* Third section - Effects */}
-                <div className="col-auto d-flex flex-column ">
+                <div className="d-flex flex-column ">
                     <h5 className={"text-center"}>EFFECTS</h5>
                     <table>
                         <tbody>

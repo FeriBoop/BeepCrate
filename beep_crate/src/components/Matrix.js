@@ -19,7 +19,7 @@ import Tone from "../structures/Tone.mjs";
 const Matrix = () => {
     const handlePlaybackStop = () => {
         console.log("Playback stopped")
-        if(trackControlRef.current) {
+        if (trackControlRef.current) {
             trackControlRef.current.setIsPlaying(false);
         }
     }
@@ -125,7 +125,7 @@ const Matrix = () => {
                     // Fill the cells based on the length
                     for (let i = 0; i < cellCount; i++) {
                         if (x + i < totalColumns) {
-                            newMatrixData[rowIndex][x + i] = { note: length2, startIndex: x, cellCount }; // Fill the cell with the tone name
+                            newMatrixData[rowIndex][x + i] = {note: length2, startIndex: x, cellCount}; // Fill the cell with the tone name
                         }
                     }
                 });
@@ -136,7 +136,7 @@ const Matrix = () => {
             setTrack(importedTrack);
         }
     }, [importedTrack, totalColumns]);
-/**
+    /**
      * Add columns to the matrix as needed to fit additional notes.
      * @param {number} num - Number of columns to add
      */
@@ -249,7 +249,7 @@ const Matrix = () => {
                 rowIndex === row
                     ? rowData.map((cell, colIndex) =>
                         (colIndex >= adjustedCol && colIndex < endColumn)
-                            ? { note: currentNote, startIndex: adjustedCol, cellCount }
+                            ? {note: currentNote, startIndex: adjustedCol, cellCount}
                             : cell
                     )
                     : rowData
@@ -258,7 +258,7 @@ const Matrix = () => {
         });
     };
 
-/**
+    /**
      * Handle right-click on a matrix cell to remove a note.
      * @param {Event} event - Mouse event for the right-click
      * @param {number} row - Row index
@@ -273,7 +273,7 @@ const Matrix = () => {
             return; // No note at the clicked position
         }
 
-        const { startIndex, cellCount } = noteData;
+        const {startIndex, cellCount} = noteData;
         const endColumn = startIndex + cellCount;
 
         setMatrixData(prevData => {
@@ -297,8 +297,8 @@ const Matrix = () => {
      */
     const handlePlayChanged = (playing) => {
         if (!playing) track.stopPlayingTrack()
-        else if(playPosition === "index") track.playFromIndex().then();
-        else if(playPosition === "start") track.playFromBeginning().then();
+        else if (playPosition === "index") track.playFromIndex().then();
+        else if (playPosition === "start") track.playFromBeginning().then();
     }
 
     /**
@@ -313,49 +313,60 @@ const Matrix = () => {
     return (
         <div className="vh-100 d-flex flex-column">
             <Title/>
-            <div className={"d-flex flex-row align-content-start"}>
-                <TrackControlComponent track={track}
-                                       ref={trackControlRef}
-                                       onSelectedNoteChanged={setCurrentNote}
-                                       onPlayingChanged={handlePlayChanged}
-                                       onRewindToIndex={() => {setPlayPosition("index")}}
-                                       onRewindToBeginning={() => {setPlayPosition("start")}}
-                />
-                {/* Load/save buttons*/}
-                <div className={"d-flex flex-column justify-content-center"}>
-                    <button onClick={handleLoadTrack}>Load Track</button>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        style={{display: "none"}}
-                        accept=".json"
-                        onChange={handleFileChange}
-                    />
-                    <button onClick={handleSave}>Save</button>
-                </div>
-            </div>
 
-            <MatrixNavigation
-                handleLeftArrow={handleLeftArrow}
-                handleRightArrow={handleRightArrow}
-                startScrolling={startScrolling}
-                stopScrolling={stopScrolling}
-            />
-            {/* Play button for the track */}
-            <div className="matrix">
-                <MatrixHeader visibleColumns={visibleColumns} offset={offset}/>
-                {matrixData.map((row, rowIndex) => (
-                    <MatrixRow
-                        key={rowIndex}
-                        tones={tones}
-                        row={row}
-                        rowIndex={rowIndex}
-                        offset={offset}
-                        visibleColumns={visibleColumns}
-                        handleClick={handleClick}
-                        handleRightClick={handleRightClick}
+            <div className={"d-flex flex-row overflow-hidden"}>
+                <div className={"d-flex flex-column overflow-y-auto"}>
+                    <div className={"d-flex flex-row justify-content-start"}>
+                        <button onClick={handleLoadTrack}>Load Track</button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{display: "none"}}
+                            accept=".json"
+                            onChange={handleFileChange}
+                        />
+                        <button onClick={handleSave}>Save</button>
+                    </div>
+
+                    <TrackControlComponent className={"d-flex flex-column"}
+                                           track={track}
+                                           ref={trackControlRef}
+                                           onSelectedNoteChanged={setCurrentNote}
+                                           playPositionSelected={playPosition}
+                                           onPlayingChanged={handlePlayChanged}
+                                           onRewindToIndex={() => {
+                                               setPlayPosition("index")
+                                           }}
+                                           onRewindToBeginning={() => {
+                                               setPlayPosition("start")
+                                           }}
                     />
-                ))}
+                    {/* Load/save buttons*/}
+
+                </div>
+
+                <MatrixNavigation
+                    handleLeftArrow={handleLeftArrow}
+                    handleRightArrow={handleRightArrow}
+                    startScrolling={startScrolling}
+                    stopScrolling={stopScrolling}
+                />
+
+                <div className="matrix">
+                    <MatrixHeader visibleColumns={visibleColumns} offset={offset}/>
+                    {matrixData.map((row, rowIndex) => (
+                        <MatrixRow
+                            key={rowIndex}
+                            tones={tones}
+                            row={row}
+                            rowIndex={rowIndex}
+                            offset={offset}
+                            visibleColumns={visibleColumns}
+                            handleClick={handleClick}
+                            handleRightClick={handleRightClick}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );
