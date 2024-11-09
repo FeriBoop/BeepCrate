@@ -122,13 +122,41 @@ class TrackControlComponent extends React.Component {
     render() {
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div className={"row d-flex flex-row no-gutters"}>
-                    <TrackSettingsComponent className={"col-auto"} settings={this.props.track.trackSettings}/>
+                <div className={"d-flex flex-column no-gutters"}>
+                    {/* Playback control */}
+                    <div className={" d-flex flex-column"}>
+                        <h5 className={"text-center"}>VOLUME</h5>
+                        <div className={"row g-0"}>
+                            <input type={"range"} min={-32} max={32} value={this.state.volume}
+                                   onChange={(e) => this.setState({volume: e.target.value})}/>
+                        </div>
+                        <div className={"w-100 h-50"}>{/*Spacer*/}</div>
+                        <h5 className={"text-center"}>PLAYBACK</h5>
+                        <div className={"row d-flex justify-content-center g-0"}>
+                            <button className={"col playback-control"}
+                                    onClick={this.#handlePlayButtonClick}>
+                                <img src={this.state.playing ? "icons/button-pause.svg" : "icons/button-play.svg"} alt={"Play button icon"}/>
+                            </button>
+                            <button className={"col playback-control"}
+                                    style={this.props.playPositionSelected === 'index' ? {backgroundColor: '#aaaaaa'} : null}
+                                    onClick={this.#handleRewindToIndex}>
+                                <img src={"icons/button-rewind-to-index.svg"}
+                                     alt={"Play button icon"}/>
+                            </button>
+                            <button className={"col playback-control"}
+                                    style={this.props.playPositionSelected === 'start' ? {backgroundColor: '#aaaaaa'} : null}
+                                    onClick={this.#handleRewindToBeginning}>
+                                <img src={"icons/button-rewind-to-start.svg"}
+                                     alt={"Play button icon"}/>
+                            </button>
+
+                        </div>
+                    </div>
 
                     {/* Note selection & rythm/bpm */}
-                    <div className={"col-auto d-flex flex-column justify-content-start"}>
+                    <div className={"d-flex flex-column justify-content-start"}>
                         <h5 className={"text-center"}>NOTE SELECTION</h5>
-                        <div className={"row g-0"}>
+                        <div className={"row d-flex justify-content-center g-0"}>
                             {this.#renderNoteButtons()}
                         </div>
                         <div className={"w-100 h-25"}></div>
@@ -153,33 +181,7 @@ class TrackControlComponent extends React.Component {
                         </div>
                     </div>
 
-                    {/* Playback control */}
-                    <div className={"col-auto d-flex flex-column"}>
-                        <h5 className={"text-center"}>VOLUME</h5>
-                        <div className={"row g-0"}>
-                            <input type={"range"} min={-32} max={32} value={this.state.volume}
-                            onChange={(e) => this.setState({volume: e.target.value})}/>
-                        </div>
-                        <div className={"w-100 h-50"}>{/*Spacer*/}</div>
-                        <h5 className={"text-center"}>PLAYBACK</h5>
-                        <div className={"row g-0"}>
-                            <button className={"col playback-control"}
-                                onClick={this.#handlePlayButtonClick}>
-                                <img src={this.state.playing ? "icons/button-pause.svg" : "icons/button-play.svg"} alt={"Play button icon"}/>
-                            </button>
-                            <button className={"col playback-control"}
-                                onClick={this.#handleRewindToIndex}>
-                                <img src={"icons/button-rewind-to-index.svg"}
-                                     alt={"Play button icon"}/>
-                            </button>
-                            <button className={"col playback-control"}
-                                onClick={this.#handleRewindToBeginning}>
-                                <img src={"icons/button-rewind-to-start.svg"}
-                                     alt={"Play button icon"}/>
-                            </button>
-
-                        </div>
-                    </div>
+                    <TrackSettingsComponent className={"d-flex flex-column overflow-y-auto overflow-x-hidden"} settings={this.props.track.trackSettings}/>
                 </div>
             </div>
         )

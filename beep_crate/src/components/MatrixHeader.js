@@ -1,4 +1,5 @@
 import React from "react";
+import {TRACK_PLAY_POSITION, setTrackPlayPosition} from "../structures/GlobalVariables.mjs";
 
 /**
  * MatrixHeader component
@@ -12,13 +13,19 @@ import React from "react";
  * @returns {JSX.Element} The rendered component.
  */
 const MatrixHeader = ({ visibleColumns, offset }) => {
+    const [playPosition, setPlayPosition] = React.useState(TRACK_PLAY_POSITION);
+
     return (
-        <div className="matrix-header">
+        <div className="matrix-header sticky-top">
             <div className="matrix-tone-header">TONES</div>
             {Array.from({ length: visibleColumns }, (_, i) => (
                 <div
                     key={i + offset}
-                    className={`matrix-cell-header ${(i + 1) % 4 === 0 ? "matrix-cell-divider" : ""}`}
+                    className={`matrix-cell-header ${(i + 1) % 4 === 0 ? "matrix-cell-divider" : ""} ${(i + offset) === playPosition ? "play-index" : ""}`}
+                    onClick={() => {
+                        setPlayPosition(i + offset);
+                        setTrackPlayPosition(i + offset)
+                    }}
                 >
                     {i + 1 + offset}
                 </div>
