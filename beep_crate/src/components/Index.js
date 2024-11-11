@@ -24,7 +24,7 @@ const Index = () => {
                 tools to help you bring your music ideas to life.
             </p>
             <p>
-                Need help? Check out our <a href="/docs" target="_blank">documentation</a> for detailed instructions.
+                Need help? Check out our <a href="https://github.com/FeriBoop/BeepCrate/wiki" target="_blank">documentation</a> for detailed instructions.
             </p>
             <div className="button-group">
                 <Link to="/matrix">
